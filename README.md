@@ -4,6 +4,10 @@
 
 Short video format. Presenter's notes included. Work in progress.
 
+- [00_Getting_started](https://dozmorovlab.github.io/BIOS524_videos/00_Getting_started.html)
+- [01_RStudio](https://dozmorovlab.github.io/BIOS524_videos/01_RStudio.html)
+-	[02_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/02_Data.html)
+
 # Notes
 
 - Online Course Development Expectations for Faculty Developers, https://docs.google.com/document/d/1SSpIWrZeHu-rynreN904-MluEaPnCpWg52NeKqsHnHY/edit
