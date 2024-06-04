@@ -2,11 +2,13 @@
 
 [BIOS-524 2023 website](https://bios524-r-2023.netlify.app)
 
-Short video format. Presenter's notes included. Work in progress.
+Short video format. Presenter's notes included, invoked by "P". Work in progress.
 
-- [00_Getting_started](https://dozmorovlab.github.io/BIOS524_videos/00_Getting_started.html)
-- [01_RStudio](https://dozmorovlab.github.io/BIOS524_videos/01_RStudio.html)
--	[02_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/02_Data.html)
+## Week 1
+
+- [10_Getting_started](https://dozmorovlab.github.io/BIOS524_videos/10_Getting_started.html)
+- [11_RStudio](https://dozmorovlab.github.io/BIOS524_videos/11_RStudio.html)
+-	[12_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/12_Data.html)
 
 # Notes
 
