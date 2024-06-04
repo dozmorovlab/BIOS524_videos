@@ -1,0 +1,200 @@
+---
+title: "R preliminaries"
+# subtitle: "Getting started"
+# author: "Mikhail Dozmorov"
+# institute: "Virginia Commonwealth University"
+# date: "`r Sys.Date()`"
+# date: "08-23-2023"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["xaringan-themer.css", "xaringan-my.css"]
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "midnightblue",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "500", "500i"),
+  code_font_google   = google_font("Droid Mono"),
+  link_color = "#8B1A1A", #firebrick4, "deepskyblue1"
+  text_font_size = "28px"
+)
+```
+
+## R expressions, function calls, and objects
+
+According to John Chambers, one of the creators of R’s precursor S:
+
+- Everything that exists in R is an **object**
+
+- Everything that happens in R is a **call to a function**
+
+???
+
+In R, you will be working with objects and you will be modifying, visualizing, and computing on them using functions. You can think of objects as data in various forms. Functions, on  the other hand, are methods that perform operations on objects.
+
+---
+## Assignment operator
+
+- We often need to save a function's result or output. For this we use the assignment operator: ` <- `, preferred over ` = `  
+```{r}
+scores <- mtcars
+``` 
+ 
+Now we can use `scores` as an argument to other functions. For example, compute summary statistics for each column in the data:
+
+```{r}
+summary(scores[1:4]) # First four elements
+```
+
+???
+
+Objects and output of functions are stored in variables. For this, we use the assignment operator. It looks like a left-facing arrow. You can use the 'equal sign' operator for assignment, but it is considered bad practice. You can simply type the arrow operator or use a keyboard shortcut. Press `Alt + -` on Windows or `Option + -` on a Mac to quickly insert the arrow operator. After a variable is assigned, you can apply functions to it, like the 'summary' function in the example.
+
+---
+## Variables
+
+- **Scalars** (0-dimensional): `a = 42`, `b = a / 7`
+
+- **Vectors** (1-dimensional): `b = c(12, 14, 16)`
+    - Access vector element as `b[2]` (returns 14)
+
+???
+
+Variables can store various types of data. Scalars, or zero-dimensional variables, are the simplest, they store a single number. Vectors are one-dimensional variables, they store a sequence of numbers. You can access any element in a vector by using square brackets and a positional index. Note positions in R start from 1, so if you are looking for the second element, simply use 2. 
+
+---
+## Variables
+
+- **Matrices** (2-dimensional):
+
+```{r}
+mtx = matrix(data = c(3, 1, 3, 2, 3, 2), ncol = 2)
+mtx
+mtx[2, ] # Second row
+mtx[1:2, 1:2] # Top left 2x2 submatrix
+```
+
+???
+
+Matrices are two-dimensional variables storing the data in rows and columns. You can subset a matrix using square brackets and the comma-separated indices for rows (which it the first axis) and columns (the second axis). If you want to select the full row or column, simply leave the empty space for the corresponding axis.
+
+---
+## Variable names
+
+- camelCase, snake_case, PascalCase
+
+- Be careful not to name your variables as function names. E.g., `c` is a bad variable name because `c()` is a function for combining variables. Check its help function `?c`
+
+- With auto-completion in RStudio, you don't need to worry about variable name length - make names that are self-explanatory
+
+- Check [Google R Style Guide](https://google.github.io/styleguide/Rguide.html), [The Tidyverse Style Guide](http://adv-r.had.co.nz/Style.html), [Bioconductor Coding Style](https://bioconductor.org/developers/how-to/coding-style/)
+
+.small[ https://betterprogramming.pub/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841 ]
+
+???
+
+A few words how to name your variables. First, R is case-sensitive. Second, R is flexible and allow you to name your variables and functions any way you like. Alphanumeric characters, dots and underscores are permissible. Avoid using special characters and reserved words for variable names, e.g., built-in function names. Use several words connected by underscores to make variable names self-explanatory. With autocompletion in RStudio you don't need to worry about length of your variable names.
+
+---
+## Variable types
+
+```{r}
+# numeric: real or decimal numbers, sometimes referred to as “double” integer: a subset of numeric in which numbers are stored as integers
+a <- 2
+# character: sometimes referred to as string data, surrounded by quotes
+a <- "sun"
+# Character vector: a sequence of characters
+a <- c("a", "beer", "2")
+# logical: Boolean data (TRUE and FALSE)
+a <- TRUE
+# Logical vector
+a <- c(TRUE, FALSE, FALSE)
+# Can be used to subset matrices, positions evaluated to TRUE will be selected
+mtx # Reminder how our matrix looks like
+mtx[a, ] # Select all columns for row indices evaluating to TRUE
+```
+
+???
+
+So far, we discussed numerical variables. But variables can also contain characters, wrapped in double quotes. You can combine multiple characters into a character vector by using the 'c()' function. 'c' stands for concatenate and will concatenate comma-separated characters or numbers. There is also the logical or Boolean data type that can be combined into vectors. Such vectors can be used to subset the data. Data with indices that evaluate to TRUE will be returned. 
+<!-- - complex: complex numbers with real and imaginary parts (e.g., 1 + 4i) -->
+<!-- - raw: bytes of data (machine-readable, but not human readable) -->
+
+---
+## Auxillary functions for variables
+
+```{r}
+a <- c("a", "b", "c") # Character vector
+class(a) # Getting its class
+str(a) # STRucture also shows data type
+is.numeric(a) # Checks whether a variable is a character, returns TRUE if matches
+is.character(a)
+as.numeric(c("2", "a")) # Attempt to convert types
+```
+
+???
+
+Several functions allow you to investigate class and structure of your variables. Use 'class' to see the data type, and use 'str' (short for structure) to get a more detailed overview. You can also check whether a variable is of special type by using 'is.numeric' or 'is.character' functions. You can also coerce one data type in another using 'as.numeric' or 'as.character'. If a variable cannot be converted, NA, not available, is returned.
+
+---
+## Factors
+
+- Factors are how R represents categorical data.
+- There are two kinds of factors:
+    - `factor()` - used for nominal data ("Cats", "Cats", "Dogs", "Birds")
+    - `ordered()` - used for ordinal data ("First", "Second", "Second", "Third")
+
+```{r}
+factor(c("Cats", "Cats", "Dogs", "Birds"))
+ordered(c("First", "Second", "Second", "Third"))
+```
+
+???
+
+Factor variables are how R represents categorical data. Factors come in two main types, each designed for different kinds of categorical data. Nominal factors are most frequently used, where the order of categories doesn't inherently have special meaning. Ordinal factors store data where categories have a meaningful order. 
+
+---
+## Factors Auxillary functions
+
+- `levels()` - get levels of a factor. Also, an argument in the `factor()` function allowing to set the order manually
+- `relevel()` - reorder factor levels. `rev()` - reverse factor levels
+- `is.factor()`, `as.factor()`
+
+```{r}
+a <- factor(c("Cats", "Cats", "Dogs", "Birds"))
+a
+relevel(a, ref = "Cats")
+```
+
+???
+
+Unique categories in a factor are called levels. By default, levels for nominal factors are sorted alphabetically. We can override the default order with the 'relevel' function to set the new first, or reference, level. 
+
+---
+## Factors Auxillary functions
+
+- `levels()` - get levels of a factor. Also, an argument in the `factor()` function allowing to set the order manually
+- `relevel()` - reorder factor levels. `rev()` - reverse factor levels
+- `is.factor()`, `as.factor()`
+
+```{r}
+a <- factor(c("Cats", "Cats", "Dogs", "Birds"))
+levels(a) <- rev(levels(a))
+a
+levels(a) <- c("Dogs", "Birds", "Cats")
+a
+```
+
+???
+
+We can reverse the order of levels with the 'rev' function. Or, assign our own order of levels. The order of levels will be important for accurate data analysis and visualization.

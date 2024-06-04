@@ -10,6 +10,10 @@ Short video format. Presenter's notes included, invoked by "P". Work in progress
 - [11_RStudio](https://dozmorovlab.github.io/BIOS524_videos/11_RStudio.html)
 -	[12_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/12_Data.html)
 
+## Week 2
+
+- [21_R_basics](https://dozmorovlab.github.io/BIOS524_videos/21_R_basics.html)
+
 # Notes
 
 - Online Course Development Expectations for Faculty Developers, https://docs.google.com/document/d/1SSpIWrZeHu-rynreN904-MluEaPnCpWg52NeKqsHnHY/edit
