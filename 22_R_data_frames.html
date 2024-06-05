@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data frames in R</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data frames in R
+]
+
+---
+
+
+
+
+## Data frames
+
+- **Data frames**: tables or 2-dimensional arrays. Think matrices that can hold different data types.
+    - The column names should be non-empty.
+    - Columns should be the same length.
+    - The row names should be unique.
+    - The data stored in a data frame can be of numeric, factor, or character.
+
+
+``` r
+dat = data.frame(Column.1 = c(3, 1, 3), Column.2 = c("2", "3", "2"))
+dat
+```
+
+```
+##   Column.1 Column.2
+## 1        3        2
+## 2        1        3
+## 3        3        2
+```
+
+???
+
+Another fundamental data type in R is data frame. Data frames are two-dimensional tables that, in contrast to matrices, can store different data types. Data frames have column names that can be used to access data in a given column. Data frames also have row names, either numeric or character, that can similarly be used to access data in a given row. Columns in a data frame can store different data types.
+
+---
+## Data frames helper functions
+
+.small[
+
+``` r
+dim(dat) # Dimensions (rows x columns) of a data frame
+```
+
+```
+## [1] 3 2
+```
+
+``` r
+nrow(dat) # Number of rows
+```
+
+```
+## [1] 3
+```
+
+``` r
+ncol(dat) # Number of columns, same as length(dat)
+```
+
+```
+## [1] 2
+```
+
+``` r
+rownames(dat) # Row names
+```
+
+```
+## [1] "1" "2" "3"
+```
+
+``` r
+colnames(dat) # Column names
+```
+
+```
+## [1] "Column.1" "Column.2"
+```
+]
+
+???
+
+Several handy functions are available to explore properties of data frames. The dim function (short for dimensions) returns the number of rows and columns in a data frame. nrow and ncol return the number of rows and columns, respectively. rownames and colnames return row and column names
+
+---
+## Subsetting elements in a data frame
+
+
+``` r
+dat[3, 2]          # [] contain row/column indices
+```
+
+```
+## [1] "2"
+```
+
+``` r
+dat[2:3, "Column.2", drop = FALSE] # Address by column name 
+```
+
+```
+##   Column.2
+## 2        3
+## 3        2
+```
+
+``` r
+dat$Column.2[3]    # Use $ shortcut to access column by name
+```
+
+```
+## [1] "2"
+```
+
+???
+
+Similar to matrices, square brackets with comma-separated row and column indices are used to subset data frames. A range of indices can be specified using colon-separated start and end indices. Instead of column or row indices, the corresponding names can be used. Note that R tries to simplify the returned data. For example, if you subset a column, it will be coerced from the data frame type to a vector. To keep the original dimensions and data type, we use the drop equal to FALSE argument. 
+
+Another convenient shortcut to access columns is the dollar sign. Type the name of a data frame, then dollar sign, and  note the RStudio autocomplete feature offering a list of column names.
+
+---
+## Subsetting elements in a data frame
+
+
+``` r
+# Compare column classes
+class(dat$Column.1)
+```
+
+```
+## [1] "numeric"
+```
+
+``` r
+class(dat$Column.2)
+```
+
+```
+## [1] "character"
+```
+
+???
+
+R sees data frames as collections of columns and simplifies access to them with the dollar sign. We can check class of each column using the dollar sign shortcut. Pause the video and get class of the first row and first element in the first row - how and why do they differ?
+
+---
+## Subsetting elements in a data frame
+
+
+``` r
+index &lt;- dat$Column.1 &gt; 1 # Which rows have numbers larger than 1
+index
+```
+
+```
+## [1]  TRUE FALSE  TRUE
+```
+
+``` r
+dat[index, ]
+```
+
+```
+##   Column.1 Column.2
+## 1        3        2
+## 3        3        2
+```
+
+
+``` r
+index &lt;- grepl("1", colnames(dat)) # Which columns have "1" in their names
+index
+```
+
+```
+## [1]  TRUE FALSE
+```
+
+``` r
+dat[, index]
+```
+
+```
+## [1] 3 1 3
+```
+
+???
+
+We can use boolean vectors to subset the data. For example, to select rows with numbers in the first column larger than 1, we can create an index vector and use in within the square brackets. This method is very powerful and allow multiple criteria to be used, including pattern matching in text. Both rows and columns can be subsetted using boolean vectors. Pattern matching is particularly useful to subset columns - we can select columns having specific names. The grepl function, which stands for grep logical, returns the boolean vector with TRUE if a pattern is matched.
+
+---
+## Inspecting data.frame objects
+
+There are several built-in functions that are useful for working with data frames
+
+* Content:
+    * `head()` - shows the first few rows (6 by default)
+    * `tail()` - shows the last few rows
+    * `View()` - visualize the whole dataset in RStudio
+
+
+``` r
+head(cars, n = 3)
+```
+
+```
+##   speed dist
+## 1     4    2
+## 2     4   10
+## 3     7    4
+```
+
+???
+
+To get an idea what data are available in your data frame, use the self explanatory head and tail functions. Also, use the View function to visualize the data in RStudio. This function gets called when you click a variable in the Environment tab in RStudio.
+
+&lt;!-- * Size: --&gt;
+&lt;!--     * `dim()`: returns a 2-element vector with the number of rows in the first element, and the number of columns as the second element (the dimensions of the object). --&gt;
+&lt;!--     * `nrow()`: returns the number of rows. --&gt;
+&lt;!--     * `ncol()`: returns the number of columns. --&gt;
+
+---
+## Inspecting data.frame objects
+
+* `colnames()` (or just `names()`): returns the column names (column-centric data view)
+
+
+``` r
+str(dat) # Structure of the object and information about the class, length and content of each column
+```
+
+```
+## 'data.frame':	3 obs. of  2 variables:
+##  $ Column.1: num  3 1 3
+##  $ Column.2: chr  "2" "3" "2"
+```
+
+
+``` r
+summary(dat) # For a data frame, column-centric summary statistics
+```
+
+```
+##     Column.1       Column.2        
+##  Min.   :1.000   Length:3          
+##  1st Qu.:2.000   Class :character  
+##  Median :3.000   Mode  :character  
+##  Mean   :2.333                     
+##  3rd Qu.:3.000                     
+##  Max.   :3.000
+```
+
+???
+
+rownames and colnames functions, along with nrow and ncol, allow you to explore names and number of rows and columns in a data frame. Note the column-centric view of a data frame - instead of colnames, you can use names and R will look for the column names. Same with the length function - when applied to data frames, it will return the length, or the number of columns.
+
+The str function (short for structure) will show the column-centric structure of a data frame, with column classes and the first few elements. 
+
+The summary function works differently depending on what kind of object you pass to it. Passing a data frame to the `summary()` function prints out useful summary statistics about numeric columns (min, max, median, mean, etc.) and basic information about character columns.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

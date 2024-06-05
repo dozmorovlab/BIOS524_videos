@@ -6,13 +6,14 @@ Short video format. Presenter's notes included, invoked by "P". Work in progress
 
 ## Week 1
 
-- [10_Getting_started](https://dozmorovlab.github.io/BIOS524_videos/10_Getting_started.html)
-- [11_RStudio](https://dozmorovlab.github.io/BIOS524_videos/11_RStudio.html)
--	[12_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/12_Data.html)
+- [10_Getting_started](https://dozmorovlab.github.io/BIOS524_videos/10_Getting_started.html) - R overview, installation, getting help
+- [11_RStudio](https://dozmorovlab.github.io/BIOS524_videos/11_RStudio.html) - RStudio installation, interface, settings, help
+-	[12_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/12_Data.html) - loading and saving data in R
 
 ## Week 2
 
-- [21_R_basics](https://dozmorovlab.github.io/BIOS524_videos/21_R_basics.html)
+- [21_R_basics](https://dozmorovlab.github.io/BIOS524_videos/21_R_basics.html) - variables, assignment operator, matrices, variable types, factors, helper functions
+- [22_R_data_frames](https://dozmorovlab.github.io/BIOS524_videos/22_R_data_frames.html) - data frames, subsetting, helper functions
 
 # Notes
 

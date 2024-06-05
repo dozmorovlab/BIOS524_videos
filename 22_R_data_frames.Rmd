@@ -1,0 +1,156 @@
+---
+title: "Data frames in R"
+# subtitle: "Getting started"
+# author: "Mikhail Dozmorov"
+# institute: "Virginia Commonwealth University"
+# date: "`r Sys.Date()`"
+# date: "08-23-2023"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["xaringan-themer.css", "xaringan-my.css"]
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "midnightblue",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "500", "500i"),
+  code_font_google   = google_font("Droid Mono"),
+  link_color = "#8B1A1A", #firebrick4, "deepskyblue1"
+  text_font_size = "28px"
+)
+```
+
+## Data frames
+
+- **Data frames**: tables or 2-dimensional arrays. Think matrices that can hold different data types.
+    - The column names should be non-empty.
+    - Columns should be the same length.
+    - The row names should be unique.
+    - The data stored in a data frame can be of numeric, factor, or character.
+
+```{r}
+dat = data.frame(Column.1 = c(3, 1, 3), Column.2 = c("2", "3", "2"))
+dat
+```
+
+???
+
+Another fundamental data type in R is data frame. Data frames are two-dimensional tables that, in contrast to matrices, can store different data types. Data frames have column names that can be used to access data in a given column. Data frames also have row names, either numeric or character, that can similarly be used to access data in a given row. Columns in a data frame can store different data types.
+
+---
+## Data frames helper functions
+
+.small[
+```{r}
+dim(dat) # Dimensions (rows x columns) of a data frame
+nrow(dat) # Number of rows
+ncol(dat) # Number of columns, same as length(dat)
+rownames(dat) # Row names
+colnames(dat) # Column names
+```
+]
+
+???
+
+Several handy functions are available to explore properties of data frames. The dim function (short for dimensions) returns the number of rows and columns in a data frame. nrow and ncol return the number of rows and columns, respectively. rownames and colnames return row and column names
+
+---
+## Subsetting elements in a data frame
+
+```{r}
+dat[3, 2]          # [] contain row/column indices
+dat[2:3, "Column.2", drop = FALSE] # Address by column name 
+dat$Column.2[3]    # Use $ shortcut to access column by name
+```
+
+???
+
+Similar to matrices, square brackets with comma-separated row and column indices are used to subset data frames. A range of indices can be specified using colon-separated start and end indices. Instead of column or row indices, the corresponding names can be used. Note that R tries to simplify the returned data. For example, if you subset a column, it will be coerced from the data frame type to a vector. To keep the original dimensions and data type, we use the drop equal to FALSE argument. 
+
+Another convenient shortcut to access columns is the dollar sign. Type the name of a data frame, then dollar sign, and  note the RStudio autocomplete feature offering a list of column names.
+
+---
+## Subsetting elements in a data frame
+
+```{r}
+# Compare column classes
+class(dat$Column.1)
+class(dat$Column.2)
+```
+
+???
+
+R sees data frames as collections of columns and simplifies access to them with the dollar sign. We can check class of each column using the dollar sign shortcut. Pause the video and get class of the first row and first element in the first row - how and why do they differ?
+
+---
+## Subsetting elements in a data frame
+
+```{r}
+index <- dat$Column.1 > 1 # Which rows have numbers larger than 1
+index
+dat[index, ]
+```
+
+```{r}
+index <- grepl("1", colnames(dat)) # Which columns have "1" in their names
+index
+dat[, index]
+```
+
+???
+
+We can use boolean vectors to subset the data. For example, to select rows with numbers in the first column larger than 1, we can create an index vector and use in within the square brackets. This method is very powerful and allow multiple criteria to be used, including pattern matching in text. Both rows and columns can be subsetted using boolean vectors. Pattern matching is particularly useful to subset columns - we can select columns having specific names. The grepl function, which stands for grep logical, returns the boolean vector with TRUE if a pattern is matched.
+
+---
+## Inspecting data.frame objects
+
+There are several built-in functions that are useful for working with data frames
+
+* Content:
+    * `head()` - shows the first few rows (6 by default)
+    * `tail()` - shows the last few rows
+    * `View()` - visualize the whole dataset in RStudio
+
+```{r}
+head(cars, n = 3)
+```
+
+???
+
+To get an idea what data are available in your data frame, use the self explanatory head and tail functions. Also, use the View function to visualize the data in RStudio. This function gets called when you click a variable in the Environment tab in RStudio.
+
+<!-- * Size: -->
+<!--     * `dim()`: returns a 2-element vector with the number of rows in the first element, and the number of columns as the second element (the dimensions of the object). -->
+<!--     * `nrow()`: returns the number of rows. -->
+<!--     * `ncol()`: returns the number of columns. -->
+
+---
+## Inspecting data.frame objects
+
+* `colnames()` (or just `names()`): returns the column names (column-centric data view)
+
+```{r}
+str(dat) # Structure of the object and information about the class, length and content of each column
+```
+
+```{r}
+summary(dat) # For a data frame, column-centric summary statistics
+```
+
+???
+
+rownames and colnames functions, along with nrow and ncol, allow you to explore names and number of rows and columns in a data frame. Note the column-centric view of a data frame - instead of colnames, you can use names and R will look for the column names. Same with the length function - when applied to data frames, it will return the length, or the number of columns.
+
+The str function (short for structure) will show the column-centric structure of a data frame, with column classes and the first few elements. 
+
+The summary function works differently depending on what kind of object you pass to it. Passing a data frame to the `summary()` function prints out useful summary statistics about numeric columns (min, max, median, mean, etc.) and basic information about character columns.
