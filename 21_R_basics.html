@@ -172,7 +172,7 @@ So far, we discussed numerical variables. But variables can also contain charact
 &lt;!-- - raw: bytes of data (machine-readable, but not human readable) --&gt;
 
 ---
-## Auxillary functions for variables
+## Helper functions for variables
 
 
 ``` r
@@ -256,7 +256,7 @@ ordered(c("First", "Second", "Second", "Third"))
 Factor variables are how R represents categorical data. Factors come in two main types, each designed for different kinds of categorical data. Nominal factors are most frequently used, where the order of categories doesn't inherently have special meaning. Ordinal factors store data where categories have a meaningful order. 
 
 ---
-## Factors Auxillary functions
+## Factors helper functions
 
 - `levels()` - get levels of a factor. Also, an argument in the `factor()` function allowing to set the order manually
 - `relevel()` - reorder factor levels. `rev()` - reverse factor levels
@@ -287,7 +287,7 @@ relevel(a, ref = "Cats")
 Unique categories in a factor are called levels. By default, levels for nominal factors are sorted alphabetically. We can override the default order with the 'relevel' function to set the new first, or reference, level. 
 
 ---
-## Factors Auxillary functions
+## Factors helper functions
 
 - `levels()` - get levels of a factor. Also, an argument in the `factor()` function allowing to set the order manually
 - `relevel()` - reorder factor levels. `rev()` - reverse factor levels
