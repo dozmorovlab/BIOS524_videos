@@ -58,7 +58,7 @@ summary(scores[1:4]) # First four elements
 
 ???
 
-Objects and output of functions are stored in variables. For this, we use the assignment operator. It looks like a left-facing arrow. You can use the 'equal sign' operator for assignment, but it is considered bad practice. You can simply type the arrow operator or use a keyboard shortcut. Press `Alt + -` on Windows or `Option + -` on a Mac to quickly insert the arrow operator. After a variable is assigned, you can apply functions to it, like the 'summary' function in the example.
+Objects and output of functions are stored in variables. For this, we use the assignment operator. It looks like a left-facing arrow. You can use the 'equal sign' operator for assignment, but it is considered bad practice. You can simply type the arrow operator or use a keyboard shortcut. Press `Alt + -` on Windows or `Option + -` on a Mac to quickly insert the arrow operator. After a variable is assigned, you can apply functions to it, like the 'summary' function in the example. Note that in R, the hash sigh is used for comments.
 
 ---
 ## Variables
