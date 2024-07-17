@@ -32,11 +32,11 @@ mono_light(
 
 ## Data frames
 
-- **Data frames**: tables or 2-dimensional arrays. Think matrices that can hold different data types.
-    - The column names should be non-empty.
-    - Columns should be the same length.
-    - The row names should be unique.
-    - The data stored in a data frame can be of numeric, factor, or character.
+- **Data frames**: tables or 2-dimensional arrays. Think matrices that can hold different data types
+    - The column names should be non-empty
+    - Columns should be the same length
+    - The row names should be unique
+    - The data stored in a data frame can be numeric, factor, or character
 
 ```{r}
 dat = data.frame(Column.1 = c(3, 1, 3), Column.2 = c("2", "3", "2"))
@@ -67,10 +67,28 @@ Several handy functions are available to explore properties of data frames. The 
 ---
 ## Subsetting elements in a data frame
 
+Similar to matrices, square brackets with comma-separated row and column indices are used to subset data frames. A range of indices can be specified using colon-separated start and end indices. Instead of column or row indices, the corresponding names can be used. Note that R tries to simplify the returned data. For example, if you subset a column, it will be coerced from the data frame type to a vector. To keep the original dimensions and data type, we use the drop equal to FALSE argument
+
 ```{r}
 dat[3, 2]          # [] contain row/column indices
 dat[2:3, "Column.2", drop = FALSE] # Address by column name 
+```
+
+---
+## Subsetting elements in a data frame
+
+R sees data frames as collections of columns and simplifies access to them with the dollar sign.  Type the name of a data frame, then dollar sign, and  note the RStudio autocomplete feature offering a list of column names
+
+```{r}
 dat$Column.2[3]    # Use $ shortcut to access column by name
+```
+
+We can check class of each column using the dollar sign shortcut
+
+```{r}
+# Compare column classes
+class(dat$Column.1)
+class(dat$Column.2)
 ```
 
 ???
@@ -82,29 +100,14 @@ Another convenient shortcut to access columns is the dollar sign. Type the name 
 ---
 ## Subsetting elements in a data frame
 
+We can use boolean vectors to subset the data. For example, to select rows with numbers in the first column larger than 1, we can create an index vector and use in within the square brackets. This method is very powerful and allow multiple criteria to be used, including pattern matching in text. Both rows and columns can be subsetted using boolean vectors
+
 ```{r}
-# Compare column classes
-class(dat$Column.1)
-class(dat$Column.2)
+dat[dat$Column.1 > 1, ] # Which rows have numbers larger than 1
 ```
-
-???
-
-R sees data frames as collections of columns and simplifies access to them with the dollar sign. We can check class of each column using the dollar sign shortcut. Pause the video and get class of the first row and first element in the first row - how and why do they differ?
-
----
-## Subsetting elements in a data frame
-
+Pattern matching is particularly useful to subset columns - we can select columns having specific names. The grepl function, which stands for grep logical, returns the boolean vector with TRUE if a pattern is matched
 ```{r}
-index <- dat$Column.1 > 1 # Which rows have numbers larger than 1
-index
-dat[index, ]
-```
-
-```{r}
-index <- grepl("1", colnames(dat)) # Which columns have "1" in their names
-index
-dat[, index]
+dat[, grepl("1", colnames(dat))] # Which columns have "1" in their names
 ```
 
 ???
@@ -137,7 +140,7 @@ To get an idea what data are available in your data frame, use the self explanat
 ---
 ## Inspecting data.frame objects
 
-* `colnames()` (or just `names()`): returns the column names (column-centric data view)
+Remember column-centric operations on data frames - the `str()` function will returs structure of a data frame for each column. Similarly, the `summary()` function will get summary of each column
 
 ```{r}
 str(dat) # Structure of the object and information about the class, length and content of each column
@@ -154,3 +157,36 @@ rownames and colnames functions, along with nrow and ncol, allow you to explore 
 The str function (short for structure) will show the column-centric structure of a data frame, with column classes and the first few elements. 
 
 The summary function works differently depending on what kind of object you pass to it. Passing a data frame to the `summary()` function prints out useful summary statistics about numeric columns (min, max, median, mean, etc.) and basic information about character columns.
+
+---
+## Lists
+
+Lists are more flexible data structures than data frames. Similar to data frames, they can contain elements of different types. Unlike data frames, each list element can be of a different length. List elements may or may not have names. A very loose analogy is to consider lists as data frames where columns can have different lengths. You can coerce a list to a vector by using the `unlist()` function
+    
+```{r}
+(lst = list(A = rep(2, 5), B = letters[1:10]))
+unlist(lst) # Collapse all elements into a vector
+```
+
+???
+
+Lists are more flexible data structures than data frames. Similar to data frames, they can contain elements of different types. Unlike data frames, each list element can be of a different length. List elements may or may not have names. A very loose analogy is to consider lists as data frames where columns can have different lengths. You can coerce a list to a vector by using the unlist function
+
+---
+## Addressing elements in a list
+
+List elements can be accessed with the square bracket syntax. You can access each element by its index or name. Note that using single pair of brackets (`lst[1]` or `lst["A"]`) will extract the full element, together with its name
+
+```{r}
+lst[1] # First _element_
+```
+
+To extract the content of an element, use double bracket syntax or the familiar dollar sign shortcut (`lst[[1]]` or `lst[["A"]]`, `lst$A`)
+
+```{r}
+lst[[1]] # Same as `lst[["A"]]` or `lst$A`
+```
+
+???
+
+List elements can be accessed with the square bracket syntax. You can access each element by its index or name. Note that using single pair of brackets will extract the full element, together with its name. To extract the content of an element, use double bracket syntax or the familiar dollar sign shortcut.

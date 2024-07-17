@@ -20,19 +20,6 @@ class: center, middle, inverse, title-slide
 
 
 
-## R expressions, function calls, and objects
-
-According to John Chambers, one of the creators of R’s precursor S:
-
-- Everything that exists in R is an **object**
-
-- Everything that happens in R is a **call to a function**
-
-???
-
-In R, you will be working with objects and you will be modifying, visualizing, and computing on them using functions. You can think of objects as data in various forms. Functions, on  the other hand, are methods that perform operations on objects.
-
----
 ## Assignment operator
 
 - We often need to save a function's result or output. For this we use the assignment operator: ` &lt;- `, preferred over ` = `  
@@ -65,6 +52,8 @@ Objects and output of functions are stored in variables. For this, we use the as
 ---
 ## Variables
 
+Variables can store various types of data. Scalars, or zero-dimensional variables, are the simplest, they store a single number. Vectors are one-dimensional variables, they store a sequence of numbers. You can access any element in a vector by using square brackets and a positional index. Note positions in R start from 1, so if you are looking for the second element, simply use 2
+
 - **Scalars** (0-dimensional): `a = 42`, `b = a / 7`
 
 - **Vectors** (1-dimensional): `b = c(12, 14, 16)`
@@ -77,19 +66,18 @@ Variables can store various types of data. Scalars, or zero-dimensional variable
 ---
 ## Variables
 
-- **Matrices** (2-dimensional):
+Matrices are two-dimensional variables storing the data in rows and columns. You can subset a matrix using square brackets and the comma-separated indices for rows (which it the first axis) and columns (the second axis). If you want to select the full row or column, simply leave the empty space for the corresponding axis
 
 
 ``` r
-mtx = matrix(data = c(3, 1, 3, 2, 3, 2), ncol = 2)
+mtx = matrix(data = c(3, 1, 3, 2, 3, 2), ncol = 3)
 mtx
 ```
 
 ```
-##      [,1] [,2]
-## [1,]    3    2
-## [2,]    1    3
-## [3,]    3    2
+##      [,1] [,2] [,3]
+## [1,]    3    3    3
+## [2,]    1    2    2
 ```
 
 ``` r
@@ -97,7 +85,7 @@ mtx[2, ] # Second row
 ```
 
 ```
-## [1] 1 3
+## [1] 1 2 2
 ```
 
 ``` r
@@ -106,8 +94,8 @@ mtx[1:2, 1:2] # Top left 2x2 submatrix
 
 ```
 ##      [,1] [,2]
-## [1,]    3    2
-## [2,]    1    3
+## [1,]    3    3
+## [2,]    1    2
 ```
 
 ???
@@ -119,11 +107,11 @@ Matrices are two-dimensional variables storing the data in rows and columns. You
 
 - camelCase, snake_case, PascalCase
 
-- Be careful not to name your variables as function names. E.g., `c` is a bad variable name because `c()` is a function for combining variables. Check its help function `?c`
+- Be careful not to name your variables as function names. E.g., `c` is a bad variable name because `c()` is a function for combining variables. Check `?Reserved` for the list of reserved words
 
 - With auto-completion in RStudio, you don't need to worry about variable name length - make names that are self-explanatory
 
-- Check [Google R Style Guide](https://google.github.io/styleguide/Rguide.html), [The Tidyverse Style Guide](http://adv-r.had.co.nz/Style.html), [Bioconductor Coding Style](https://bioconductor.org/developers/how-to/coding-style/)
+- Check "Google R Style Guide", https://google.github.io/styleguide/Rguide.html) and "The Tidyverse Style Guide", http://adv-r.had.co.nz/Style.html for variable naming best practices
 
 .small[ https://betterprogramming.pub/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841 ]
 
@@ -136,25 +124,24 @@ A few words how to name your variables. First, R is case-sensitive. Second, R is
 
 
 ``` r
-# numeric: real or decimal numbers, sometimes referred to as “double” integer: a subset of numeric in which numbers are stored as integers
+# numeric: real or decimal numbers, sometimes referred to as “double” integer
 a &lt;- 2
-# character: sometimes referred to as string data, surrounded by quotes
+# character: sometimes referred to as string data, surrounded by double quotes
 a &lt;- "sun"
 # Character vector: a sequence of characters
 a &lt;- c("a", "beer", "2")
 # logical: Boolean data (TRUE and FALSE)
 a &lt;- TRUE
 # Logical vector
-a &lt;- c(TRUE, FALSE, FALSE)
+a &lt;- c(TRUE, FALSE)
 # Can be used to subset matrices, positions evaluated to TRUE will be selected
 mtx # Reminder how our matrix looks like
 ```
 
 ```
-##      [,1] [,2]
-## [1,]    3    2
-## [2,]    1    3
-## [3,]    3    2
+##      [,1] [,2] [,3]
+## [1,]    3    3    3
+## [2,]    1    2    2
 ```
 
 ``` r
@@ -162,7 +149,7 @@ mtx[a, ] # Select all columns for row indices evaluating to TRUE
 ```
 
 ```
-## [1] 3 2
+## [1] 3 3 3
 ```
 
 ???
@@ -193,7 +180,7 @@ str(a) # STRucture also shows data type
 ```
 
 ``` r
-is.numeric(a) # Checks whether a variable is a character, returns TRUE if matches
+is.numeric(a) # Checks whether a variable is a number, returns TRUE if matches
 ```
 
 ```
@@ -209,7 +196,7 @@ is.character(a)
 ```
 
 ``` r
-as.numeric(c("2", "a")) # Attempt to convert types
+as.numeric(c("2", "a")) # Attempt to convert types, unsuccessful will be NA
 ```
 
 ```
@@ -227,8 +214,8 @@ Several functions allow you to investigate class and structure of your variables
 ---
 ## Factors
 
-- Factors are how R represents categorical data.
-- There are two kinds of factors:
+- Factor variables are how R represents categorical data
+- Factors come in two main types, each designed for different kinds of categorical data:
     - `factor()` - used for nominal data ("Cats", "Cats", "Dogs", "Birds")
     - `ordered()` - used for ordinal data ("First", "Second", "Second", "Third")
 
@@ -258,7 +245,7 @@ Factor variables are how R represents categorical data. Factors come in two main
 ---
 ## Factors helper functions
 
-- `levels()` - get levels of a factor. Also, an argument in the `factor()` function allowing to set the order manually
+- `levels()` - get/set levels (unique categories) of a factor. Also, an argument in the `factor()` function allowing to set the order manually
 - `relevel()` - reorder factor levels. `rev()` - reverse factor levels
 - `is.factor()`, `as.factor()`
 
@@ -287,37 +274,242 @@ relevel(a, ref = "Cats")
 Unique categories in a factor are called levels. By default, levels for nominal factors are sorted alphabetically. We can override the default order with the 'relevel' function to set the new first, or reference, level. 
 
 ---
-## Factors helper functions
+## Conditional Operators
 
-- `levels()` - get levels of a factor. Also, an argument in the `factor()` function allowing to set the order manually
-- `relevel()` - reorder factor levels. `rev()` - reverse factor levels
-- `is.factor()`, `as.factor()`
+Conditional Operators are used to compare variables and return TRUE/FALSE boolean statements
 
+- `==` - Equal to
+- `!=` - Not equal to
+- `&lt;` - Less than
+- `&gt;` - Greater than
+- `&lt;=` - Less than or equal to
+- `&gt;=` - Greater than or equal to
 
-``` r
-a &lt;- factor(c("Cats", "Cats", "Dogs", "Birds"))
-levels(a) &lt;- rev(levels(a))
-a
-```
-
-```
-## [1] Cats  Cats  Birds Dogs 
-## Levels: Dogs Cats Birds
-```
 
 ``` r
-levels(a) &lt;- c("Dogs", "Birds", "Cats")
-a
+c(1, 4) &gt; 3
 ```
 
 ```
-## [1] Birds Birds Cats  Dogs 
-## Levels: Dogs Birds Cats
+## [1] FALSE  TRUE
+```
+
+``` r
+"a" == tolower("A")
+```
+
+```
+## [1] TRUE
 ```
 
 ???
 
-We can reverse the order of levels with the 'rev' function. Or, assign our own order of levels. The order of levels will be important for accurate data analysis and visualization.
+In R, conditional operators are used to compare values and determine if conditions are met. They are fundamental for decision-making in programming. The primary conditional operators include equal to (double equal sign), not equal to (exclamation mark negates the equal sign), less than, greater than, less than or equal to, greater than or equal to. 
+
+---
+## Logical Operators
+
+Logical operators are used to combine or modify logical statements
+
+- `&amp;` - Logical AND
+- `|` - Logical OR
+- `!` - Logical NOT
+
+
+``` r
+TRUE &amp; FALSE # returns FALSE because both conditions must be true for AND.
+```
+
+```
+## [1] FALSE
+```
+
+``` r
+TRUE | FALSE # returns TRUE because only one condition needs to be true for OR.
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+!TRUE # returns FALSE because NOT reverses the logical state.
+```
+
+```
+## [1] FALSE
+```
+
+???
+
+Logical operators help in constructing more complex conditions. They allow to combine multiple conditional statements and return the joint boolean output. They include the ampersand sign, logical and, the pipe sign, logical or, and the exclamation mark, the negation operator
+
+---
+## Conditional and logical operators
+
+By combining conditional and logical operators, R allows for flexible condition checking
+
+
+``` r
+age &lt;- c(22, 17, 30)
+income &lt;- c(25000, 5000, 60000)
+is_student &lt;- c(TRUE, FALSE, FALSE)
+# Eligibility for a loan
+eligibility &lt;- (age &gt; 18 &amp; income &gt; 30000 &amp; !is_student)
+eligibility  # Outputs a logical vector indicating eligibility
+```
+
+```
+## [1] FALSE FALSE  TRUE
+```
+
+???
+
+We can combine various comparisons to get a consensus boolean vector satisfying the comparisons and the logical operators. For example, if we have three vectors of data, we can apply conditional statements to each and then combine them to get the resulting boolean vector satisfying the combination logic
+
+
+---
+## Conditional and logical operators
+
+- Like arithmetic operations, logic statements follow the order of preference
+
+- Operators `&gt;`, `==`, `!` etc. are evaluated before `&amp;` and `|`
+
+- If in doubt, wrap your expressions in parentheses
+
+
+``` r
+3 &lt; 4 &amp; "a" == "b"
+```
+
+
+``` r
+(3 &lt; 4) &amp; ("a" == "b")
+```
+
+???
+
+Like arithmetic operations, logic statements follow the order of preference. Operators more than, equal to, not, and others are evaluated before and and pipe operators. If unsure, wrap the conditional statements in parentheses before combining them with the logical operators.
+
+---
+## Conditional and logical operators
+
+What do you think will happen if we evaluate `0.1 + 0.2 == 0.3`?
+
+
+``` r
+0.1 + 0.2 == 0.3
+```
+
+```
+## [1] FALSE
+```
+
+**Problem:** Computers represent numbers as binary (i.e. base 2) floating-point numbers. Read more https://floating-point-gui.de/basic/
+
+**Solution:** Use `all.equal()` for evaluating floats (i.e fractions).
+
+
+``` r
+all.equal(0.1 + 0.2, 0.3)
+```
+
+```
+## [1] TRUE
+```
+
+???
+
+When comparing decimal numbers, conditional comparisons may fail because R compares such numbers as floating point numbers at a certain precision level. R has the all.equal function for such cases. The all.equal function can be applied to compare character vectors and other data types.
+
+---
+## Value matching
+
+- To see whether an object is contained within (i.e. matches one of) a list of items, use `%in%`
+
+
+``` r
+5 %in% 1:10
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+1:10 %in% 5
+```
+
+```
+##  [1] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+```
+
+``` r
+"x" %in% c("z", "y", "x") # Equivalent to "x" %in% c("x", "y", "z")
+```
+
+```
+## [1] TRUE
+```
+
+&lt;!--
+- Value matching can be useful to subset R objects
+
+
+``` r
+pvals &lt;- c(0.05, 0.04, 0.09, 0.03, 0.12)
+pvals[pvals &lt;= 0.05]
+```
+
+```
+## [1] 0.05 0.04 0.03
+```
+--&gt;
+
+???
+
+To see whether an object is contained within a list of items, use in wrapped in percent sign. This operator is particularly useful when the order of variables to be matched with an object is unknown. This and other conditional operators can be useful to cubset R objects.
+
+---
+## Clean up your environment
+
+
+``` r
+z &lt;- c(1, 2, 3)
+ls()
+```
+
+```
+## [1] "a"           "age"         "eligibility" "income"      "is_student" 
+## [6] "mtx"         "pvals"       "scores"      "z"
+```
+
+``` r
+rm(z) # Remove one variable
+ls()
+```
+
+```
+## [1] "a"           "age"         "eligibility" "income"      "is_student" 
+## [6] "mtx"         "pvals"       "scores"
+```
+
+``` r
+# Remove everything from the environment
+rm(list = ls()) # Not the same as restarting R session
+ls()
+```
+
+```
+## character(0)
+```
+
+Best practice is to use Session/Restart R in RStudio to clean up your environment and loaded packages
+
+
+???
+
+As you create R objects, your environment can become cluttered. You can use the rm function to remove one or all variables. Note that this function does not remove loaded packaged. The safest way to clean your R session is to restart R using the Session/Restart R menu in RStudio.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Functions to work with text</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Functions to work with text
+]
+
+---
+
+
+
+
+## Text format
+
+- Text is the most cross-platform format to share data
+
+- Typically, data is stored as field-delimited columns (think Excel). Delimiter may be tab character (".tsv" or ".txt" file extension), or comma (comma-separated values, ".csv")
+
+- Disadvantage - can be large. Solution - compression (**gzip**ping), with tools to manipulate compressed files without uncompressing
+
+- Text data often needs to be cleaned and formatted/restructured before analysis
+
+- Extracting meaningful information from text requires pattern matching using regular expressions (regex)
+
+---
+## Examples of string manipulation
+
+- **Base R Functions**: Functions like `grep()`, `gsub()`, `strsplit()`, and more
+
+
+``` r
+text &lt;- "The quick brown fox jumps over the lazy dog."
+print(strsplit(text, " ")[[1]])
+```
+
+```
+## [1] "The"   "quick" "brown" "fox"   "jumps" "over"  "the"   "lazy"  "dog."
+```
+
+- **Stringr Package**: Part of the Tidyverse, offers a consistent set of functions designed for string manipulation (`str_replace()`, `str_split()`, etc.)
+
+
+``` r
+library(stringr)
+print(str_split(text, " ")[[1]])
+```
+
+```
+## [1] "The"   "quick" "brown" "fox"   "jumps" "over"  "the"   "lazy"  "dog."
+```
+
+---
+## Basic String Operations
+
+- `nchar()` - Counting Characters in a String
+
+``` r
+text &lt;- "Biostatistics"
+print(nchar(text))  
+```
+
+```
+## [1] 13
+```
+- `toupper()`, `tolower()` - Changing Case
+
+``` r
+print(toupper(text))
+```
+
+```
+## [1] "BIOSTATISTICS"
+```
+
+---
+## Basic String Operations
+
+- `substr()` - Extracting or Replacing Substrings
+
+``` r
+text &lt;- "Biostatistics is fascinating"
+print(substr(text, 1, 4))
+```
+
+```
+## [1] "Bios"
+```
+
+- `strsplit()` - Splitting Strings into Substrings by a delimiter. 
+Returns a list containing split words
+
+
+``` r
+print(strsplit(text, " ")[[1]]) # The content, split words
+```
+
+```
+## [1] "Biostatistics" "is"            "fascinating"
+```
+
+---
+## Concatenation strings
+
+- `paste()`: Concatenates strings with a separator
+
+``` r
+text1 &lt;- "Bio"
+text2 &lt;- "statistics"
+print(paste(text1, text2, sep = "-"))
+```
+
+```
+## [1] "Bio-statistics"
+```
+
+``` r
+print(paste(c(text1, text2), sep = "-")) # Doesn't work for character vectors
+```
+
+```
+## [1] "Bio"        "statistics"
+```
+
+``` r
+print(paste(c(text1, text2), collapse = "-"))
+```
+
+```
+## [1] "Bio-statistics"
+```
+
+---
+## Concatenation strings
+
+- `paste0()`: Concatenates strings without any separator
+
+``` r
+text1 &lt;- "Bio"
+text2 &lt;- "statistics"
+print(paste0(text1, text2)) # Default separator is "", nothing
+```
+
+```
+## [1] "Biostatistics"
+```
+
+``` r
+print(paste0(c(text1, text2))) # Still need to use collapse = " "
+```
+
+```
+## [1] "Bio"        "statistics"
+```
+
+---
+## Introduction to Regular Expressions (regex)
+
+- Regular expressions (regex) are sequences of characters that form search patterns
+
+- Used for string matching, searching, and replacing within text data
+
+- Data cleaning, validation, extraction, and transformation
+
+.small[ https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended ]
+
+---
+## Introduction to Regular Expressions (regex)
+
+**Metacharacters**: .^$*+?{}[]\|()
+- `.` - Matches any character except newline
+  - `c.t` - Matches any string containing 'c', any character, then 't' (e.g., 'cat', 'cot')
+- `^` - Matches the start of a string
+  - `^A` - Matches any string that starts with 'A'
+- `$` - Matches the end of a string
+  - `dog$` - Matches any string that ends with 'dog'
+- `*` - Matches 0 or more repetitions
+- `+` - Matches 1 or more repetitions
+- `?` - Matches 0 or 1 repetition
+- `[]` - Matches any one of the characters inside the brackets
+- `|` - Matches either the pattern before or the pattern after the |
+
+---
+## Using `grep()`, `grepl()` for Pattern Matching and Replacement
+
+- `grep()` - Returns indices of the elements that match the pattern
+- `grepl()` - Returns a logical vector indicating if a pattern was found
+
+``` r
+text &lt;- c("cat", "dog", "bird", "catfish")
+print(grep("^cat", text))
+```
+
+```
+## [1] 1 4
+```
+
+``` r
+print(grepl("cat$", text))
+```
+
+```
+## [1]  TRUE FALSE FALSE FALSE
+```
+
+---
+## Using `sub()`, and `gsub()` for Pattern Matching and Replacement
+
+- `sub()` - Replaces the first instance of a pattern in a string
+
+``` r
+text &lt;- "The cat sat on the cat mat."
+print(sub("cat", "dog", text))
+```
+
+```
+## [1] "The dog sat on the cat mat."
+```
+- `gsub()` - Replaces all instances of a pattern in a string (global sub)
+
+``` r
+print(gsub("cat", "dog", text))
+```
+
+```
+## [1] "The dog sat on the dog mat."
+```
+
+---
+## String Formatting
+
+- `formatC()` - Creating Formatted Strings. Also, `sprintf()`
+  - Syntax: `formatC(x, format, digits, flag, width, ...)`
+
+``` r
+numbers &lt;- c(123.456, 78.9, 0.1234)
+# Fixed-point formatting
+print(formatC(numbers, format = "f", digits = 2))
+```
+
+```
+## [1] "123.46" "78.90"  "0.12"
+```
+
+``` r
+# Scientific notation
+print(formatC(numbers, format = "e", digits = 2))
+```
+
+```
+## [1] "1.23e+02" "7.89e+01" "1.23e-01"
+```
+
+---
+## String Formatting
+
+- `formatC()` - Creating Formatted Strings. Also, `sprintf()`
+  - Syntax: `formatC(x, format, digits, flag, width, ...)`
+
+``` r
+numbers &lt;- c(123.456, 78.9, 0.1234)
+# Padding numbers with zeros
+print(formatC(numbers, format = "d", flag = "0", width = 5))
+```
+
+```
+## [1] "00123" "00078" "00000"
+```
+
+``` r
+# Left and right alignment, note string conversion
+print(formatC(numbers, format = "d", flag = "-", width = 5))
+```
+
+```
+## [1] "123  " "78   " "0    "
+```
+
+---
+## String Manipulation with stringr Package
+
+Functions in `stringr` for enhanced string manipulation
+- `str_sub()`, `str_replace()`, `str_remove()`, `str_to_upper()` and more
+
+https://stringr.tidyverse.org/
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -12,10 +12,10 @@ Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous
 
 ## Week 2
 
-- [21_R_basics](https://dozmorovlab.github.io/BIOS524_videos/21_R_basics.html) - variables, assignment operator, matrices, variable types, factors, helper functions
+- [21_R_basics](https://dozmorovlab.github.io/BIOS524_videos/21_R_basics.html) - variables, assignment operator, matrices, variable types, factors, conditional and logical operators, helper functions
 - [22_R_data_frames](https://dozmorovlab.github.io/BIOS524_videos/22_R_data_frames.html) - data frames, subsetting, helper functions. Lists, accessing elements
-- [23_Text](https://dozmorovlab.github.io/BIOS524_videos/23_Text.html) - working with text data
-- [24_R_graphics](https://dozmorovlab.github.io/BIOS524_videos/24_R_graphics.html) - base R graphics
+- [23_Text](https://dozmorovlab.github.io/BIOS524_videos/23_Text.html) - working with text data, concatenation, regular expressions, pattern substitution, string formatting, stringr package
+- [24_R_graphics](https://dozmorovlab.github.io/BIOS524_videos/24_R_graphics.html) - base R graphics, common plot functions, saving plots, base graphics cheatsheet
 
 ## Week 3
 

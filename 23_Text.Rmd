@@ -1,0 +1,199 @@
+---
+title: "Functions to work with text"
+# subtitle: "Biostatistical Computing with R"
+# author: "Mikhail Dozmorov"
+# institute: "Virginia Commonwealth University"
+# date: "`r Sys.Date()`"
+# date: "08-23-2023"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["xaringan-themer.css", "xaringan-my.css"]
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+```{r xaringan-themer, include = FALSE}
+options(blogdown.knit.serve_site = FALSE)
+library(xaringanthemer)
+mono_light(
+  base_color = "midnightblue",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "500", "500i"),
+  code_font_google   = google_font("Droid Mono"),
+  link_color = "#8B1A1A", #firebrick4, "deepskyblue1"
+  text_font_size = "28px",
+  code_font_size = "26px"
+)
+```
+
+## Text format
+
+- Text is the most cross-platform format to share data
+
+- Typically, data is stored as field-delimited columns (think Excel). Delimiter may be tab character (".tsv" or ".txt" file extension), or comma (comma-separated values, ".csv")
+
+- Disadvantage - can be large. Solution - compression (**gzip**ping), with tools to manipulate compressed files without uncompressing
+
+- Text data often needs to be cleaned and formatted/restructured before analysis
+
+- Extracting meaningful information from text requires pattern matching using regular expressions (regex)
+
+---
+## Examples of string manipulation
+
+- **Base R Functions**: Functions like `grep()`, `gsub()`, `strsplit()`, and more
+
+```{r}
+text <- "The quick brown fox jumps over the lazy dog."
+print(strsplit(text, " ")[[1]])
+```
+
+- **Stringr Package**: Part of the Tidyverse, offers a consistent set of functions designed for string manipulation (`str_replace()`, `str_split()`, etc.)
+
+```{r message=FALSE, warning=FALSE}
+library(stringr)
+print(str_split(text, " ")[[1]])
+```
+
+---
+## Basic String Operations
+
+- `nchar()` - Counting Characters in a String
+```{r}
+text <- "Biostatistics"
+print(nchar(text))  
+```
+- `toupper()`, `tolower()` - Changing Case
+```{r}
+print(toupper(text))
+```
+
+---
+## Basic String Operations
+
+- `substr()` - Extracting or Replacing Substrings
+```{r}
+text <- "Biostatistics is fascinating"
+print(substr(text, 1, 4))
+```
+
+- `strsplit()` - Splitting Strings into Substrings by a delimiter. 
+Returns a list containing split words
+
+```{r}
+print(strsplit(text, " ")[[1]]) # The content, split words
+```
+
+---
+## Concatenation strings
+
+- `paste()`: Concatenates strings with a separator
+```{r}
+text1 <- "Bio"
+text2 <- "statistics"
+print(paste(text1, text2, sep = "-"))
+print(paste(c(text1, text2), sep = "-")) # Doesn't work for character vectors
+print(paste(c(text1, text2), collapse = "-"))
+```
+
+---
+## Concatenation strings
+
+- `paste0()`: Concatenates strings without any separator
+```{r}
+text1 <- "Bio"
+text2 <- "statistics"
+print(paste0(text1, text2)) # Default separator is "", nothing
+print(paste0(c(text1, text2))) # Still need to use collapse = " "
+```
+
+---
+## Introduction to Regular Expressions (regex)
+
+- Regular expressions (regex) are sequences of characters that form search patterns
+
+- Used for string matching, searching, and replacing within text data
+
+- Data cleaning, validation, extraction, and transformation
+
+.small[ https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended ]
+
+---
+## Introduction to Regular Expressions (regex)
+
+**Metacharacters**: .^$*+?{}[]\|()
+- `.` - Matches any character except newline
+  - `c.t` - Matches any string containing 'c', any character, then 't' (e.g., 'cat', 'cot')
+- `^` - Matches the start of a string
+  - `^A` - Matches any string that starts with 'A'
+- `$` - Matches the end of a string
+  - `dog$` - Matches any string that ends with 'dog'
+- `*` - Matches 0 or more repetitions
+- `+` - Matches 1 or more repetitions
+- `?` - Matches 0 or 1 repetition
+- `[]` - Matches any one of the characters inside the brackets
+- `|` - Matches either the pattern before or the pattern after the |
+
+---
+## Using `grep()`, `grepl()` for Pattern Matching and Replacement
+
+- `grep()` - Returns indices of the elements that match the pattern
+- `grepl()` - Returns a logical vector indicating if a pattern was found
+```{r}
+text <- c("cat", "dog", "bird", "catfish")
+print(grep("^cat", text))
+print(grepl("cat$", text))
+```
+
+---
+## Using `sub()`, and `gsub()` for Pattern Matching and Replacement
+
+- `sub()` - Replaces the first instance of a pattern in a string
+```{r}
+text <- "The cat sat on the cat mat."
+print(sub("cat", "dog", text))
+```
+- `gsub()` - Replaces all instances of a pattern in a string (global sub)
+```{r}
+print(gsub("cat", "dog", text))
+```
+
+---
+## String Formatting
+
+- `formatC()` - Creating Formatted Strings. Also, `sprintf()`
+  - Syntax: `formatC(x, format, digits, flag, width, ...)`
+```{r}
+numbers <- c(123.456, 78.9, 0.1234)
+# Fixed-point formatting
+print(formatC(numbers, format = "f", digits = 2))
+# Scientific notation
+print(formatC(numbers, format = "e", digits = 2))
+```
+
+---
+## String Formatting
+
+- `formatC()` - Creating Formatted Strings. Also, `sprintf()`
+  - Syntax: `formatC(x, format, digits, flag, width, ...)`
+```{r}
+numbers <- c(123.456, 78.9, 0.1234)
+# Padding numbers with zeros
+print(formatC(numbers, format = "d", flag = "0", width = 5))
+# Left and right alignment, note string conversion
+print(formatC(numbers, format = "d", flag = "-", width = 5))
+```
+
+---
+## String Manipulation with stringr Package
+
+Functions in `stringr` for enhanced string manipulation
+- `str_sub()`, `str_replace()`, `str_remove()`, `str_to_upper()` and more
+
+https://stringr.tidyverse.org/
+
