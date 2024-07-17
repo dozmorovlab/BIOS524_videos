@@ -33,10 +33,17 @@ Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous
 
 - [61_Tidyverse_dplyr](https://dozmorovlab.github.io/BIOS524_videos/61_Tidyverse_dplyr.html) - Tidyverse packages, principles of tidy data, reading data, tibbles substituting data frames, wide/long data format, data manipulation with dplyr, the pipe operator
 
-.html
-71_Tidyverse_ggplot2.html
-81_Packages.html
-82_Packages.html
+## Week 7
+
+- [71_Tidyverse_ggplot2](https://dozmorovlab.github.io/BIOS524_videos/71_Tidyverse_ggplot2.html) - Anscombe's quartet, grammar of graphics, ggplot2 syntax and basic components (data, aesthetics, geometries), splitting plots, visual themes, saving plots, graphics editors
+
+## Week 8
+
+- [81_Packages](https://dozmorovlab.github.io/BIOS524_videos/81_Packages.html) - creating functions and R packages. Arguments, recursive functions. Package's building blocks, DESCRIPTION 
+
+- [82_Packages](https://dozmorovlab.github.io/BIOS524_videos/82_Packages.html) - documenting your package with roxygen2, NAMESPACE file, vignettes, building and debugging your package, including datasets
+
+
 
 # Notes
 

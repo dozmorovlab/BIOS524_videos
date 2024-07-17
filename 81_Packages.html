@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction to functions and R packages</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introduction to functions and R packages
+]
+
+---
+
+
+
+
+
+
+## Do One Thing and Do It Well
+
+- Functions are minimal bits of **repeated code** that do one thing well
+
+- Should be universal – applied to a variety of problems
+
+- Scalability – should handle small and large tasks equally well
+
+``` r
+fahrenheit_to_celsius &lt;- function(temp_F) {
+  temp_C &lt;- (temp_F - 32) * 5 / 9
+  return(temp_C)
+}
+```
+
+---
+## Writing your functions	
+
+- Each function better be in a separate file, e.g., `temperature.R`
+
+- Should contain code and documentation
+
+- In a package, functions are placed in the `R` subfolder
+
+``` r
+fahrenheit_to_celsius &lt;- function(temp_F) {
+  temp_C &lt;- (temp_F - 32) * 5 / 9
+  return(temp_C)
+}
+```
+
+---
+## Functions
+
+Functions are created using the `function()` directive
+
+``` r
+f &lt;- function(&lt;arguments&gt;) {
+# Do something interesting
+# Return the result 
+}
+```
+
+The return value of a function is the last expression in the function body to be evaluated
+
+---
+## Arguments
+
+- Functions have named arguments
+
+- Arguments may have default values, be required, optional, or missing
+
+- Arguments can be set by name, the order is not important
+``` r
+sd(x = mtx, na.rm = TRUE) # Equivalent to sd(na.rm = TRUE, x = mtx)
+```
+
+- Arguments can be matched positionally
+``` r
+sd(mtx, TRUE) # But changing order won't work. sd(TRUE, mtx) - wrong
+```
+
+- Always use the default order. Using names is recommended for clarity. Mix and match OK
+
+---
+## Message throughout the function
+
+- `message("message")` will output “message” upon running unless `suppressMessages` is set to TRUE
+
+- `warning("warning")` will output a warning with the message “warning” upon running unless `suppressWarnings` is set to TRUE
+
+- `stop("error")` will terminate execution of a function and provide the message “error” upon exit. If the function is part of a larger script, will terminate running the entire script
+
+---
+## Recursive function: factorial
+
+
+``` r
+# fact1 calculates the factorial of a number x using a recursive approach
+fact1 &lt;- function(x) {
+    if (x == 1) return(1) else return(x * fact1(x - 1)) 
+}
+
+# fact2 calculates the factorial of a number x using a vectorized approach
+fact2 &lt;- function(x) {
+    prod(1:x)
+}
+
+# fact3 calculates the factorial of a number x using the gamma function
+fact3 &lt;- function(x) {
+    gamma(x + 1)
+}
+```
+
+---
+## Recursive function: factorial
+
+
+``` r
+system.time(for (i in 1:1e4) fact1(100))
+```
+
+```
+##    user  system elapsed 
+##   0.329   0.009   0.339
+```
+
+``` r
+system.time(for (i in 1:1e4) fact2(100))
+```
+
+```
+##    user  system elapsed 
+##   0.012   0.000   0.011
+```
+
+``` r
+system.time(for (i in 1:1e4) fact3(100))
+```
+
+```
+##    user  system elapsed 
+##   0.007   0.000   0.008
+```
+
+---
+## Recursive function: Fibonacci numbers
+
+
+``` r
+# fibR calculates the nth Fibonacci number using a recursive approach.
+# The function calls itself with n-1 and n-2 until the base cases of 
+# n == 0 or n == 1 are reached. While simple and elegant, this method 
+# can be highly inefficient for large values of n due to redundant 
+# calculations, resulting in exponential time complexity.
+fibR &lt;- function(n) {
+    if (n == 0) return(0)
+    if (n == 1) return(1)
+    return (fibR(n - 1) + fibR(n - 2))
+}
+```
+
+
+
+---
+## Making Functions Available in the R Environment
+
+- Copy-paste your function's code in the console
+
+- If you saved your function in a file, source it with `source("path/to/my_functions.R")`
+  - If you open this file in RStudio, you can click the "Source" button
+
+- Functions from other packages are made available by loading a package with `library(package_name)`
+
+---
+class: inverse, center, middle
+
+# Packages
+
+---
+## DRY, don't repeat yourself
+
+- If you're repeating the same lines of code in multiple places, you should turn those minimal repetitive tasks into functions – reuse your code
+
+- A package is a collection of frequently used functions
+
+- Package = easiest way to distribute code and data
+
+- Package = easiest way to reuse other’s code
+
+---
+## Starting an R package using RStudio
+
+Ideally, create packages from scratch as soon as you begin on a project
+
+- RStudio -&gt; File -&gt; New project -&gt; New Directory -&gt; R Package
+
+.center[&lt;img src="img/new_project.png" height=400 &gt;]
+
+---
+## Package made simple with usethis
+
+`usethis` is a workflow package: it automates repetitive tasks that arise during project setup and development, both for R packages and non-package projects
+
+``` r
+library(usethis)
+
+# Create a new package
+path &lt;- file.path(tempdir(), "mypkg")
+create_package(path)
+```
+
+- Most functions start with `use_*()` (e.g., `use_vignette()`, `use_mit_license()`)
+- `usethis::create_package()` will create package's skeleton and the DESCRIPTION file
+
+
+.small[https://usethis.r-lib.org/]
+
+---
+## `DESCRIPTION` - package's metadata
+
+- **Package** - Name of the package
+- **Type** - Type of package, usually "Package"
+- **Title** - A short title for the package
+- **Version** - Current version of the package
+- **Author** - Author(s) of the package, including roles (aut, cre, ctb)
+- **Maintainer** - Person responsible for package maintenance
+- **Description** - A brief description of what the package does
+- **License** - The license under which the package is distributed
+- **Depends** - Specifies the R version and other packages
+- **Imports** - Lists additional packages that are imported
+- **Suggests** - Packages that are suggested but not required
+- **Enhances** - Packages that are enhanced by this package
+- **Encoding** - Character encoding used in the package
+- **LazyData** - Indicates whether lazy-loading of data is used
+- **RoxygenNote** - Version of roxygen2 used to generate the documentation
+
+---
+# Example of a DESCRIPTION File
+
+```
+Package: MyPackage
+Type: Package
+Title: A Brief Description of MyPackage
+Version: 1.0.0
+Author: John Doe [aut, cre], Jane Smith [ctb]
+Maintainer: John Doe &lt;johndoe@example.com&gt;
+Description: This package provides tools for XYZ analysis.
+License: GPL-3
+Depends: R (&gt;= 3.5.0)
+Imports: dplyr, ggplot2
+Suggests: testthat, knitr
+Enhances: Rcpp
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+```
+
+---
+## Starting an R package: `DESCRIPTION`
+
+Edit the `DESCRIPTION` file
+
+- Adjust _Title_, _Author_ and _role_, _Description_ (as verbose as you can)
+
+- Add license (`usethis::use_mit_license()` and similar functions)
+
+.small[http://r-pkgs.had.co.nz/description.html]
+
+---
+## Starting an R package: `DESCRIPTION`
+
+- If some of your functions use functions from other packages, you should add `imports` (forced install) and/or `suggests` (suggested install) sections to the `DESCRIPTION` file
+
+``` r
+usethis::use_package("dplyr") # Adding dplyr to Imports
+usethis::use_package("dplyr", type = "Suggests") # Adding dplyr to Suggests
+```
+
+- Functions from packages declared in the `DESCRIPTION` file should be used with the `::` sign, e.g., `dplyr::left_join()`
+
+.small[http://r-pkgs.had.co.nz/description.html]
+
+&lt;!--
+## Starting an R package: `DESCRIPTION`
+
+Short-term: Keeps track of imports (dependencies)
+
+Long-term: Help others find your package
+
+``` r
+Package: examplepackage
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: person("First", "Last", email = "first.last@example.com",
+                  role = c("aut", "cre"))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+Depends: R (&gt;= 4.0.0)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+```
+--&gt;
+
+---
+## Writing your first function
+
+Create a file `cat_function.R` with the following content
+
+``` r
+cat_function &lt;- function(love.cats = TRUE){
+  if(love.cats == TRUE){
+    print("I love cats!")
+  }
+  else {
+    print("I will love cats!")
+  }
+}
+```
+
+cat_function is defined with one argument love.cats which defaults to TRUE
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
