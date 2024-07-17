@@ -23,11 +23,11 @@ Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous
 
 ## Week 5
 
-- [51_RMarkdown](https://dozmorovlab.github.io/BIOS524_videos/51_RMarkdown.html) - Introduction to RMarkdown, tables, images
+- [51_RMarkdown](https://dozmorovlab.github.io/BIOS524_videos/51_RMarkdown.html) - Introduction to RMarkdown, text formatting, tables, images, document settings using YAML
 
-- [52_Bibliography](https://dozmorovlab.github.io/BIOS524_videos/52_Bibliography.html) - Reference management with BibTex
+- [52_Bibliography](https://dozmorovlab.github.io/BIOS524_videos/52_Bibliography.html) - Reference management with BibTex, formatting references in RMarkdown
 
-- [53_MathJax](https://dozmorovlab.github.io/BIOS524_videos/53_MathJax.html) - Reference management with BibTex
+- [53_MathJax](https://dozmorovlab.github.io/BIOS524_videos/53_MathJax.html) - formula formatting with MathJax and including them in RMarkdown
 
 
 

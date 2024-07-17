@@ -1,0 +1,145 @@
+---
+title: "Reference management with BibTex"
+# subtitle: "Getting started"
+# author: "Mikhail Dozmorov"
+# institute: "Virginia Commonwealth University"
+# date: "`r Sys.Date()`"
+# date: "09-06-2023"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["xaringan-themer.css", "xaringan-my.css"]
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "midnightblue",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "500", "500i"),
+  code_font_google   = google_font("Droid Mono"),
+  link_color = "#8B1A1A", #firebrick4, "deepskyblue1"
+  text_font_size = "28px",
+  code_font_size = "24px"
+)
+```
+
+```{r, echo=FALSE}
+catn <- function(x="") cat("    ", x, "\n")
+```
+
+## BibTex
+
+- BibTeX is a tool and a file format which are used for describing and formatting lists of references, typically for use with LaTeX document preparation. It helps in managing and formatting bibliographies and citations in scientific and academic documents
+
+``` bibtex
+@article{Berkum:2010aa,
+	Abstract = {The three-dimensional folding of chromosomes ...},
+	Author = {van Berkum, Nynke L and Lieberman-Aiden, Erez and Williams, Louise and Imakaev, Maxim and Gnirke, Andreas and Mirny, Leonid A and Dekker, Job and Lander, Eric S},
+	Date-Added = {2016-10-08 14:26:23 +0000},
+	Date-Modified = {2016-10-08 14:26:23 +0000},
+	Doi = {10.3791/1869},
+	Journal = {J Vis Exp},
+	Journal-Full = {Journal of visualized experiments : JoVE},
+	Mesh = {Chromosome Positioning; Chromosomes; DNA; Genomics; Nucleic Acid Conformation},
+	Number = {39},
+	Pmc = {PMC3149993},
+	Pmid = {20461051},
+	Pst = {epublish},
+	Title = {Hi-C: a method to study the three-dimensional architecture of genomes},
+	Year = {2010},
+	Bdsk-Url-1 = {http://dx.doi.org/10.3791/1869}}
+```
+
+---
+## BibTex
+
+
+- The BibTeX file format uses a .bib extension. It contains entries in a structured format, each entry type has specific fields
+- Each entry starts with an entry type and a citation key followed by a list of field-value pairs
+
+``` bibtex
+@article{Berkum:2010aa,
+	Abstract = {The three-dimensional folding of chromosomes ...},
+	Author = {van Berkum, Nynke L and Lieberman-Aiden, Erez and Williams, Louise and Imakaev, Maxim and Gnirke, Andreas and Mirny, Leonid A and Dekker, Job and Lander, Eric S},
+	Date-Added = {2016-10-08 14:26:23 +0000},
+	Date-Modified = {2016-10-08 14:26:23 +0000},
+	Doi = {10.3791/1869},
+	Journal = {J Vis Exp},
+	Journal-Full = {Journal of visualized experiments : JoVE},
+	Mesh = {Chromosome Positioning; Chromosomes; DNA; Genomics; Nucleic Acid Conformation},
+	Number = {39},
+	Pmc = {PMC3149993},
+	Pmid = {20461051},
+	Pst = {epublish},
+	Title = {Hi-C: a method to study the three-dimensional architecture of genomes},
+	Year = {2010},
+	Bdsk-Url-1 = {http://dx.doi.org/10.3791/1869}}
+```
+
+---
+## BibTex managers
+
+- `JabRef` for Windows, http://www.jabref.org/
+
+- `BibDesk` for Mac, http://bibdesk.sourceforge.net/
+
+- Save references in `.bib` text file
+
+<!--
+## Convert anything to BibTex
+
+- doi2bib - BibTex from DOI, arXiv, biorXiv. https://www.doi2bib.org/
+
+- Google Scholar - "Cite" as BibTeX functionality, https://scholar.google.com/
+
+- ZoteroBib - create a bibliography from a URL, ISBN, DOI, PMID, arXiv ID, or title. Download as BibTex and more. https://zbib.org/
+-->
+
+---
+## BibTex and RMarkdown
+
+Add to YAML header
+
+``` yaml
+bibliography: 3D_refs.bib
+```
+
+Insert into RMarkdown as 
+
+``` text
+The 3D structure of the human genome has proven to be highly organized 
+[@Dixon:2012aa; @Rao:2014aa].
+```
+
+Or, use the "Visual" mode in RStudio
+
+- See https://github.com/dsanson/bibdesk-pandoc-export-templates for Dragging and Dropping Pandoc-Style Citations from BibDesk
+
+
+---
+## Format your BibTex references
+
+Add to YAML header
+
+``` yaml
+csl: genomebiology.csl
+```
+
+```
+1. Hisakata R, Nishida S, Johnston A. An adaptable metric shapes perceptual 
+space. Curr Biol [Internet]. 2016 [cited 2016 Oct 3];26:1911–5. Available 
+from: http://www.cell.com/current-biology/abstract/S0960-9822(16)30544-9
+
+2. Musk E. The secret Tesla Motors master plan (just between you and me) 
+[Internet]. Tesla Blog. 2006 [cited 2016 Sep 29]. Available from:
+https://www.tesla.com/blog/secret-tesla-motors-master-plan-just-between-you-and-me
+```
+
+Get more styles at https://www.zotero.org/styles
+

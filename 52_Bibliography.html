@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Reference management with BibTex</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Reference management with BibTex
+]
+
+---
+
+
+
+
+
+
+## BibTex
+
+- BibTeX is a tool and a file format which are used for describing and formatting lists of references, typically for use with LaTeX document preparation. It helps in managing and formatting bibliographies and citations in scientific and academic documents
+
+``` bibtex
+@article{Berkum:2010aa,
+	Abstract = {The three-dimensional folding of chromosomes ...},
+	Author = {van Berkum, Nynke L and Lieberman-Aiden, Erez and Williams, Louise and Imakaev, Maxim and Gnirke, Andreas and Mirny, Leonid A and Dekker, Job and Lander, Eric S},
+	Date-Added = {2016-10-08 14:26:23 +0000},
+	Date-Modified = {2016-10-08 14:26:23 +0000},
+	Doi = {10.3791/1869},
+	Journal = {J Vis Exp},
+	Journal-Full = {Journal of visualized experiments : JoVE},
+	Mesh = {Chromosome Positioning; Chromosomes; DNA; Genomics; Nucleic Acid Conformation},
+	Number = {39},
+	Pmc = {PMC3149993},
+	Pmid = {20461051},
+	Pst = {epublish},
+	Title = {Hi-C: a method to study the three-dimensional architecture of genomes},
+	Year = {2010},
+	Bdsk-Url-1 = {http://dx.doi.org/10.3791/1869}}
+```
+
+---
+## BibTex
+
+
+- The BibTeX file format uses a .bib extension. It contains entries in a structured format, each entry type has specific fields
+- Each entry starts with an entry type and a citation key followed by a list of field-value pairs
+
+``` bibtex
+@article{Berkum:2010aa,
+	Abstract = {The three-dimensional folding of chromosomes ...},
+	Author = {van Berkum, Nynke L and Lieberman-Aiden, Erez and Williams, Louise and Imakaev, Maxim and Gnirke, Andreas and Mirny, Leonid A and Dekker, Job and Lander, Eric S},
+	Date-Added = {2016-10-08 14:26:23 +0000},
+	Date-Modified = {2016-10-08 14:26:23 +0000},
+	Doi = {10.3791/1869},
+	Journal = {J Vis Exp},
+	Journal-Full = {Journal of visualized experiments : JoVE},
+	Mesh = {Chromosome Positioning; Chromosomes; DNA; Genomics; Nucleic Acid Conformation},
+	Number = {39},
+	Pmc = {PMC3149993},
+	Pmid = {20461051},
+	Pst = {epublish},
+	Title = {Hi-C: a method to study the three-dimensional architecture of genomes},
+	Year = {2010},
+	Bdsk-Url-1 = {http://dx.doi.org/10.3791/1869}}
+```
+
+---
+## BibTex managers
+
+- `JabRef` for Windows, http://www.jabref.org/
+
+- `BibDesk` for Mac, http://bibdesk.sourceforge.net/
+
+- Save references in `.bib` text file
+
+&lt;!--
+## Convert anything to BibTex
+
+- doi2bib - BibTex from DOI, arXiv, biorXiv. https://www.doi2bib.org/
+
+- Google Scholar - "Cite" as BibTeX functionality, https://scholar.google.com/
+
+- ZoteroBib - create a bibliography from a URL, ISBN, DOI, PMID, arXiv ID, or title. Download as BibTex and more. https://zbib.org/
+--&gt;
+
+---
+## BibTex and RMarkdown
+
+Add to YAML header
+
+``` yaml
+bibliography: 3D_refs.bib
+```
+
+Insert into RMarkdown as 
+
+``` text
+The 3D structure of the human genome has proven to be highly organized 
+[@Dixon:2012aa; @Rao:2014aa].
+```
+
+Or, use the "Visual" mode in RStudio
+
+- See https://github.com/dsanson/bibdesk-pandoc-export-templates for Dragging and Dropping Pandoc-Style Citations from BibDesk
+
+
+---
+## Format your BibTex references
+
+Add to YAML header
+
+``` yaml
+csl: genomebiology.csl
+```
+
+```
+1. Hisakata R, Nishida S, Johnston A. An adaptable metric shapes perceptual 
+space. Curr Biol [Internet]. 2016 [cited 2016 Oct 3];26:1911–5. Available 
+from: http://www.cell.com/current-biology/abstract/S0960-9822(16)30544-9
+
+2. Musk E. The secret Tesla Motors master plan (just between you and me) 
+[Internet]. Tesla Blog. 2006 [cited 2016 Sep 29]. Available from:
+https://www.tesla.com/blog/secret-tesla-motors-master-plan-just-between-you-and-me
+```
+
+Get more styles at https://www.zotero.org/styles
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
