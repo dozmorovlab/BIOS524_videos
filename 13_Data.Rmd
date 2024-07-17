@@ -107,7 +107,7 @@ data.table::fwrite()
 
 ???
 
-The data.table package provides an extension of data frames called data tables, optimized for fast and efficient manipulation of large datasets. It offers enhanced performance compared to traditional data frames, especially for operations involving subsetting, grouping, and joining data. It's particularly useful for high-speed and memory efficient data handling with the fread and fwrite functions for data reading and writing in various formats. The minor disadvantage is that syntax may be less familiar to users of base R functions.
+The data.table package provides an extension of data frames called data tables, optimized for fast and efficient manipulation of large datasets. It offers enhanced performance compared to traditional data frames, especially for operations involving subsetting, grouping, and joining data. It's particularly useful for high-speed and memory efficient data handling. The fread and fwrite functions from this package can read and write data in various formats very fast. The minor disadvantage is that syntax may be less familiar to users of base R functions.
 
 ---
 ## Getting data in and out of R
@@ -130,7 +130,32 @@ writexl::write_xlsx()
 
 ???
 
-A statistician Brian Ripley stated in his famous lecture quote: “Let's not kid ourselves: the most widely used piece of software for statistics is Excel.” Several packages for handling Excel files were developed, with readxl and writexl being the most useful. They do not depend on Java or external software and can handle multiple sheets.
+Excel will be one of your main tools for handling data in tabular formats. Several packages for handling Excel files were developed, with readxl and writexl being the most useful. They do not depend on Java or external software and can handle multiple sheets.
+
+---
+## Save/load R objects
+
+- `save()`, `load()` - saves/loads R **objects** to the specified file
+``` r
+x <- stats::runif(20)
+y <- list(a = 1, b = TRUE, c = "oops")
+save(x, y, file = "xy.rda")
+load(file = "xy.rda")
+```
+
+- `saveRDS()`, `readRDS()` - saves/loads a __representation__ of the object
+``` r
+x <- stats::runif(20)
+saveRDS(x, file = "x.rds")
+x2 <- readRDS(file = "x.rds")
+identical(x, x2, ignore.environment = TRUE)
+```
+
+.small[ https://fromthebottomoftheheap.net/2012/04/01/saving-and-loading-r-objects/ ]
+
+???
+
+Another way of saving data is to save R objects in the native binary format. This is achieved with the save and load functions. These functions are useful if you want to save multiple objects in one file and restore them exactly as they were before. On the other hand, the saveRDS and loadRDS functions save a representation, or the content, of an object. They may be useful when you want to save the data stored in an object and not concerned about object names.
 
 ---
 ## R datasets
@@ -146,7 +171,7 @@ head(trees)
 
 ???
 
-Built-in datasets in R are pre-loaded datasets stored as data frames. These datasets cover a wide range of topics, including statistics, economics, biology, and social sciences, making them useful for learning, teaching, and research purposes. The data() function provides an overview of all built-in datasets and allow to load any in the R environment.
+R has several built-in datasets that cover a wide range of topics, including statistics, economics, biology, and social sciences. They are  useful for learning, teaching, and research. The data() function provides an overview of all built-in datasets and allow to load any dataset in the R environment.
 
 ---
 ## Learn more
@@ -164,9 +189,9 @@ library(swirl)
 
 ???
 
-Many free resources are available. We recommend to review the links on your screen and try the swirl R package. swirl is an interactive learning platform designed to teach R programming and data science concepts within the R environment. It provides a series of interactive lessons and quizzes that users can complete directly in the R console. The package covers various topics, from basic syntax and data structures to more advanced topics like data manipulation and visualization.
+Many free resources to learn R are available. We recommend to review the links on your screen and try the swirl R package. swirl is an interactive learning platform designed to teach R programming and data science concepts within the R environment. It provides a series of interactive lessons and quizzes that users can complete directly in the R console. The package covers various topics, from basic syntax and data structures to more advanced topics like data manipulation and visualization. Good luck on your R journey!
 
----
+<!--
 ## Conclusion
 
 .center[<img src="img/twitter_advice.png" height=400 >]
@@ -176,3 +201,4 @@ https://twitter.com/TanentzapfLab/status/1427720047431065601?s=20
 ???
 
 The post from Tanentzapf Lab shares valuable career advice for scientists venturing into the biomedical sciences field. It emphasizes the importance of coding skills that we will learn in this course, and highlights the significance of biostatistics knowledge that you are getting in other courses. Let these words serve as an inspiration to better prepare you for successful careers in biomedical research.
+-->

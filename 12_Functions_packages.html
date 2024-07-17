@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Functions and R packages</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Functions and R packages
+]
+
+---
+
+
+
+
+## R expressions, function calls, and objects
+
+According to John Chambers, one of the creators of R’s precursor S:
+
+- Everything that exists in R is an **object**
+
+- Everything that happens in R is a **call to a function**
+
+???
+
+In R, you will be working with objects and you will be modifying, visualizing, and computing on them using functions. You can think of objects as data in various forms. Functions, on  the other hand, are methods that perform operations on objects.
+
+---
+## Functions
+
+- A function is a set of statements organized together to perform a specific task
+    - **Name** - the actual name of the function, e.g., `summary()`, `mean()`
+    - **Arguments** - values passed to the functions. Argument-less functions exist
+    - **Code** - actual code of the function, type the function's name without parentheses, e.g., `cor`
+    - **Return value** - the result of the function's code execution
+
+``` r
+# `read.csv` is a function to import a CSV file, 
+# and `file` is an argument that specifies which file to import
+read.csv(file="scores.csv")
+```
+
+R has a large number of built-in functions, and the user can create their own functions
+
+???
+
+We have been using several R functions already, let's define them more formally. A function is a set of statements that execute a specific task. A function has a name and, in parentheses, arguments that are values passed to the function. A function has code and, while some functions are compiled from C programming languages, many are written in R and their code can be seen by typing the function's name without parentheses. A function typically returns a value, the result of the code execution. There are some exceptions, e.g., a function can be without arguments or not returning a value. R has a large number of built-in functions and is extendable with many more user-created functions.
+
+---
+## Running functions
+
+- From the R console - type the function and hit Enter
+    - One function at a time, not efficient
+
+- Using an `R` script - a text file that contains all your `R` functions/code
+    - `R` scripts allow you to save, edit, reproduce and share your code
+    - R scripts stored in files with `.R` extension
+    - Run the whole script as `source("script_name.R")`, or, from command line, `Rscript script_name.R`
+    - In RStudio, you can run individual lines, code chunks, or source whole scripts. Keyboard shortcuts are available
+
+???
+
+You can execute functions by typing them in the R console. A more efficient way is to organize your workflow in an R script, which is a text file containing all your R functions and code. R scripts are saved as text files with the R extension. You can run, or source, the whole scripts, or execute individual lines.
+
+---
+## Packages
+
+- All functions belong to *packages*. The `read.csv` function is in the `utils` package.
+
+- `R` comes with about 30 packages (called "base `R`")
+
+- Example: `ggplot2` is a popular package that adds functions for creating graphs in a different way than what base `R` provides
+
+- To use functions in a package, the package must be installed and loaded. (They're free)
+- You only _install_ a package once
+- You _load_ a package whenever you want to use its functions
+
+???
+
+All R functions belong to packages. R comes with about 30 preinstalled packages, called base R packages. The read.csv function that we'll be using to read the data in belongs to the utils package. To use functions from external packages, the package must be installed and loaded. You only install a package once and load it any time you want to use its functions
+
+---
+## Package repositories
+
+- `CRAN` - Comprehensive R Archive Network - a collection of &gt; 20,000 (May 2024) packages
+
+- `Bioconductor` - genomics-oriented free and open source project hosting &gt; 2,300 specialized R packages (May 2024)
+
+- `GitHub` - code-hosting repository, packages for everyone and by everyone
+
+.small[ https://cran.r-project.org/web/packages/ 
+
+https://www.bioconductor.org/
+
+https://github.com/  ]
+
+???
+
+R packages can be installed from multiple sources. CRAN, or the comprehensive R archive network, is the primary R package repository with over 20 thousand packages. Bioconductor is genomics-oriented repository of R packages hosting for over 23 hundred specialized R packages. These repositories have strict quality requirements. GutHub as another code-hosting repository where everyone can share their R packages.
+
+---
+## Installing packages
+
+- `install.packages(“&lt;package_name&gt;”)` - installs packages from CRAN, e.g., `install.packages("BiocManager")`
+
+- `install.packages(“&lt;package_name.tar.gz&gt;”, repos = NULL)` - install from a tarball archive
+
+- `R CMD INSTALL &lt;package_name.tar.gz&gt;` - install from a command line
+
+- `remotes` package - installs R packages from GitHub, GitLab, Bitbucket, Bioconductor, or plain 'subversion' or 'git' repositories. E.g., `remotes::install_github("tidyverse/ggplot2")`
+
+- `BiocManager::install()` - Install or update Bioconductor, CRAN, or GitHub packages
+
+.small[ https://CRAN.R-project.org/package=BiocManager ]
+
+???
+
+Use the install.packages() function to download and install the package from CRAN. This step needs to be done only once for each package. You can also install a package from a downloaded tarball archive, directly from R or from command lines. The remotes package simplifies package installation from GitHub and other code sharing repositories. Bioconductor has a useful BiocManager package with the install function to install packages from any major repository.
+
+---
+## Loading packages
+
+- `library()` will load the package, e.g., `library(readxl)` or `library("readxl")`
+    - But, when installing packages, always use parentheses, e.g., `install.packages("readxl")`
+
+- `require()` will load the package and, if success, return TRUE. Useful in `if` statement, e.g.
+
+``` r
+if (!require(ggplot2)) {
+  install.packages("ggplot2")
+}
+```
+
+???
+
+After installing a package, use the library function to load the package. You can type the package's name with or without parentheses. When installing packages, you would always use parentheses. The require function checks if the package is loaded and returns TRUE if yes. It may be useful in an if statement to check if the package is installed and can be loaded, and install it if not.
+
+&lt;!---
+## Loading packages
+
+- `library(package_name)` - load library to use its functions
+
+- `library()` vs. `require()`
+    - `require()` _tries_ to load the package, returns TRUE or FALSE
+    - `library()` just loads the package, fails if the package is not available
+
+- Use only `library(package_name)`
+
+.small[ https://yihui.name/en/2014/07/library-vs-require/ ]
+
+## Using functions from other packages
+
+- You can access functions without loading the package using the `::` operator, e.g., `Hmisc::rcorr()`
+
+- Entering the function name without parentheses will output its code
+
+``` r
+&gt; data.frame
+function (..., row.names = NULL, check.rows = FALSE, check.names = TRUE, 
+    fix.empty.names = TRUE, stringsAsFactors = default.stringsAsFactors()) 
+{
+    data.row.names &lt;- if (check.rows &amp;&amp; is.null(row.names)) 
+...
+```
+
+- You can access internal functions of a package with the `:::` operator if you know their name
+--&gt;
+
+---
+## Getting help
+
+- Get an overview of all functions in a package: `help(package = "dplyr")`.
+
+- Use `?function_name` to get help on a function from a _loaded_ package. E.g., `?boxplot` (same as `help(boxplot)`).
+    - Use `example(boxplot)` to see how the function can be used.
+
+- Use `??function_name` to search for the function across all installed packages, even not loaded. E.g., `??ggplotly`.
+
+- Search engine is your best friend.
+
+???
+
+When working in R, there are several ways to find help for using functions and packages. To get an overview of all functions in a package, you can use the command help(). For detailed information on a specific function from a loaded package, use ?function_name, such as ?boxplot or help(boxplot). 
+
+If you need to find a function across all installed packages, even those not currently loaded, use the double question mark syntax. Additionally, don't forget that search engines can be invaluable resources for finding help and troubleshooting specific issues.
+
+---
+## Getting help
+
+- For many packages, you can also try the `vignette()` function, which will provide an introduction to a package and it's purpose through a series of helpful examples. E.g., `vignette("dplyr")`
+    - Bioconductor packages have vignettes, short tutorials on package-specific tasks. Browse them, e.g., `browseVignettes(package = "limma")`
+
+- Some packages have interactive demos. List all such packages with `demo(package = .packages(all.available = TRUE))`, use as `demo("fibonacci", package = "future")`
+
+???
+
+For many packages, you can also try the vignette function which typically provide an introduction to a package through a series of helpful examples. Some packages have interactive demos. Many packages have dedicated websites with package-specific help and examples.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

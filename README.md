@@ -1,19 +1,36 @@
 # Lectures for the BIOS-524 course
 
-[BIOS-524 2023 website](https://bios524-r-2023.netlify.app)
+Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous version for in person teaching is available at [BIOS-524 2023 website](https://bios524-r-2023.netlify.app)
 
-Short video format. Presenter's notes included, invoked by "P". Work in progress.
 
 ## Week 1
 
 - [10_Getting_started](https://dozmorovlab.github.io/BIOS524_videos/10_Getting_started.html) - R overview, installation, getting help
 - [11_RStudio](https://dozmorovlab.github.io/BIOS524_videos/11_RStudio.html) - RStudio installation, interface, settings, help
--	[12_Data.Rmd](https://dozmorovlab.github.io/BIOS524_videos/12_Data.html) - loading and saving data in R
+-	[12_Functions_packages](https://dozmorovlab.github.io/BIOS524_videos/12_Functions_packages.html) - working with functions and packages in R
+-	[13_Data](https://dozmorovlab.github.io/BIOS524_videos/13_Data.html) - loading and saving data in R
 
 ## Week 2
 
 - [21_R_basics](https://dozmorovlab.github.io/BIOS524_videos/21_R_basics.html) - variables, assignment operator, matrices, variable types, factors, helper functions
-- [22_R_data_frames](https://dozmorovlab.github.io/BIOS524_videos/22_R_data_frames.html) - data frames, subsetting, helper functions
+- [22_R_data_frames](https://dozmorovlab.github.io/BIOS524_videos/22_R_data_frames.html) - data frames, subsetting, helper functions. Lists, accessing elements
+- [23_Text](https://dozmorovlab.github.io/BIOS524_videos/23_Text.html) - working with text data
+- [24_R_graphics](https://dozmorovlab.github.io/BIOS524_videos/24_R_graphics.html) - base R graphics
+
+## Week 3
+
+- [31_Unix](https://dozmorovlab.github.io/BIOS524_videos/31_Unix.html) - Introduction to Unix and command line
+
+## Week 5
+
+- [51_RMarkdown](https://dozmorovlab.github.io/BIOS524_videos/51_RMarkdown.html) - Introduction to RMarkdown, tables, images
+
+- [52_Bibliography](https://dozmorovlab.github.io/BIOS524_videos/52_Bibliography.html) - Reference management with BibTex
+
+- [53_MathJax](https://dozmorovlab.github.io/BIOS524_videos/53_MathJax.html) - Reference management with BibTex
+
+
+
 
 # Notes
 

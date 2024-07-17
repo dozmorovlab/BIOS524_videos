@@ -30,11 +30,29 @@ mono_light(
 )
 ```
 
+# Welcome
+
+- Welcome to the BIOS524 course, "Biostatistical Computing"
+
+- The course contains two parts
+
+- We start with the R programming language and continue with learning SAS
+
+.pull-left[
+.center[<img src="img/r_logo.png" height=200 >]
+]
+.pull-right[
+.center[<img src="img/sas_logo.png" height=200 >]
+]
+
+---
 # Why programming
 
 - Programming will make your academic journey better
 
-- Instead of remembering what buttons you clicked, what analyses you did, you write scripts with exact commands implementing your analysis and allow others to understand/reproduce it (or, spot mistakes)
+- Instead of remembering what buttons you clicked, what analyses you did, you write scripts with exact commands implementing your analysis
+
+- Your scripts allow others to understand/reproduce it (or, spot mistakes)
 
 - Programming forces you to have a deeper understanding of what you are doing, and facilitates your learning and comprehension of the methods you use
 
@@ -49,7 +67,7 @@ Welcome to the BIOS524 course, "Biostatistical Computing". It contains two parts
   - Started by Robert Gentleman and Ross Ihaka (hence `R`) in 1995 as a free, independent, open-source implementation of the `S` programming language
   - Currently, maintained by the R Core development team
   
-- Extremely powerful for statistical modeling, machine learning, data manipulation, and visualization.
+- Extremely powerful for statistical modeling, machine learning, data manipulation, and visualization
     - Efficient data analysis on data of all shapes and sizes
     - Optimized operations on vectors, matrices, lists
     - Very sophisticated graphs and data visualizations
@@ -67,20 +85,20 @@ R is a powerful programming language for statistical modeling, machine and deep 
 ---
 ## Why R?
 
-- Thousands of packages that add extra functionality. Covering virtually all scientific disciplines and analytical frameworks.
-    - Image analysis, geospatial, epidemiology, genetics, bioinformatics, and a lot more.
+- Thousands of packages that add extra functionality. Covering virtually all scientific disciplines and analytical frameworks
+    - Image analysis, geospatial, epidemiology, genetics, bioinformatics, and a lot more
 
-[20,808](https://cran.r-project.org/web/packages/index.html) CRAN (The Comprehensive R Archive Network) packages and [2,300](https://bioconductor.org/) Bioconductor packages, as of 05/28/2024
+Over [20,808](https://cran.r-project.org/web/packages/index.html) CRAN (The Comprehensive R Archive Network) packages and [2,300](https://bioconductor.org/) Bioconductor packages, as of May 2024
 
 <!-- .small[ [18,000 CRAN packages, tweet by Dirk Eddelbuettel, 2021-08-11](https://twitter.com/eddelbuettel/status/1425425651092410369?s=20) ] -->
 
-- R can connect to spreadsheets, databases, and many other data formats, on your computer or on the web.
+- R can connect to spreadsheets, databases, and many other data formats, on your computer or on the web
 
-- Large and welcoming user community.
+- Large and welcoming user community
 
 ???
 
-R has thousands of packages that extend its functionality. These packages cover virtually any scientific discipline and analysical framework, ranging from image analysis, geospatial statistics, to genomics, bioinformatics, and a lot more. R works with Excel spreadsheets, and can use practically any database and data format, on your computer and in the cloud.
+R has thousands of packages that extend its functionality. These packages cover virtually any scientific discipline and analysical framework, ranging from image analysis, geospatial statistics, to genomics, bioinformatics, and a lot more. R works with Excel spreadsheets, and can use practically any database and data format, on your computer and in the cloud
 
 ---
 ## Install/update R
@@ -97,35 +115,5 @@ R has thousands of packages that extend its functionality. These packages cover 
 
 ???
 
-To install R, visit the CRAN website and download the appropriate installer for your operating system (Windows, macOS, or Linux). Execute the installer and follow the on-screen instructions to complete the installation.
+To install R, visit the CRAN website and download the appropriate installer for your operating system, Windows, macOS, or Linux. Execute the installer and follow the on-screen instructions to complete the installation
 
----
-## Installing and loading packages
-
-```{r echo=TRUE, tidy.opts = list(width.cutoff = 60), tidy = TRUE}
-# install.packages("cowsay")
-library(cowsay)
-say(what = "fortune", by = "cat")
-```
-
-???
-
-Use the install.packages() function to download and install the package from CRAN. This step needs to be done only once for each package. Use the library() function to load the package into your R session. This step needs to be done in each new R session where you want to use the package.
-
----
-## Getting help
-
-- Get an overview of all functions in a package: `help(package = "dplyr")`.
-
-- Use `?function_name` to get help on a function from a _loaded_ package. E.g., `?boxplot` (same as `help(boxplot)`).
-    - Use `example(boxplot)` to see how the function can be used.
-
-- Use `??function_name` to search for the function across all installed packages, even not loaded. E.g., `??ggplotly`.
-
-- Search engine is your best friend.
-
-???
-
-When working in R, there are several ways to find help for using functions and packages. To get an overview of all functions in a package, you can use the command help(). For detailed information on a specific function from a loaded package, use ?function_name, such as ?boxplot or help(boxplot). 
-
-If you need to find a function across all installed packages, even those not currently loaded, use the double question mark syntax. Additionally, don't forget that search engines can be invaluable resources for finding help and troubleshooting specific issues.
