@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Unix introduction</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Unix introduction
+]
+
+---
+
+
+
+
+## R and Unix
+
+- R does not exist in isolation - it interacts with the operating system
+
+- Many data science tasks are done in Unix command line, before or after data is processed in R
+
+- Programming logic is applicable in R and Unix command line, some commands are named similarly (e.g., grep)
+
+---
+## What is Unix
+
+- Unix is a family of operating systems and environments that exploits the power of linguistic abstractions to perform tasks
+- Unix is not an acronym; it is a pun on "Multics". Multics was a large multi-user operating system that was being developed at Bell Labs shortly before Unix was created in the early '70s. Brian Kernighan is credited with the name
+- Most big data analyses and deep learning are done in Unix
+
+&lt;center&gt;&lt;img src="img/unix_plate.jpg" height="280px" /&gt;&lt;/center&gt;
+
+.small[ http://www.read.seas.harvard.edu/~kohler/class/aosref/ritchie84evolution.pdf
+
+
+---
+## History of Unix
+
+- Initial file system, command interpreter (shell), and process management started by Ken Thompson
+- File system and further development from Dennis Ritchie, as well as Doug McIlroy and Joe Ossanna
+- Vast array of simple, dependable tools that each do one simple task
+
+&lt;center&gt;&lt;img src="img/Ken_Thompson_(sitting)_and_Dennis_Ritchie_at_PDP-11_(2876612463).jpg" height="260px" /&gt;&lt;/center&gt;
+
+.small[ Ken Thompson (sitting) and Dennis Ritchie working together at a PDP-11 ]
+
+---
+## Philosophy of Unix
+
+- Vast array of simple, dependable tools
+
+- Each do one simple task, and do it really well
+
+- By combining these tools, one can conduct rather sophisticated analyses
+
+- The Linux help philosophy: "RTFM" (Read the Fine Manual)
+
+&lt;!---
+## Know your Unix
+
+- Unix users spend a lot of time at the **command line**
+
+- In Unix, a word is worth a thousand mouse clicks
+
+&lt;center&gt;&lt;img src="https://www.howtogeek.com/wp-content/uploads/2017/03/img_58c0939c2d487.png" height="370px" /&gt;&lt;/center&gt;
+--&gt;
+
+---
+## Unix systems
+
+- Three common types of laptop/desktop operating systems: Windows, Mac, Linux
+- Mac and Linux are both Unix-like
+- What that means for us: Unix-like operating systems are equipped with "shells"" that provide a command line user interface
+
+&lt;center&gt;&lt;img src="img/itu-unix-linux-1024x576.jpg" height="370px" /&gt;&lt;/center&gt;
+
+---
+## Shell, aka command line, aka terminal
+
+- Shell is an interactive environment with a set of commands to initiate and direct computations
+
+- Shell encloses the complexity of OS, hence the name  
+    - You type in commands 
+    - Shell executes them
+
+- In Unix, a command is worth a thousand mouse clicks
+
+https://en.wikipedia.org/wiki/Unix_shell 
+
+---
+## Shell, aka command line, aka terminal
+
+- The shell (`sh`) is a command-line interpreter for computer operating systems
+
+- Developed by Stephen Bourne at Bell Labs, 1976
+
+- `bash` (the Bourne-Again shell) was later developed for the GNU project and incorporates features from the original shell and other shells. It is meant to be POSIX-compliant
+
+- `zsh` (the Z shell) is an extended Bourne shell with many improvements, including some features of Bash, ksh, and tcsh. Zsh was created by Paul Falstad in 1990
+
+https://en.wikipedia.org/wiki/Stephen_R._Bourne 
+
+&lt;!--
+## Most popular types of shell
+
+- `bash` - Bourne-Again shell
+
+- `tcsh` - TENEX C shell
+
+- `zsh` - Z shell
+
+- Change shell: `chsh –s /bin/zsh`
+
+- `$SHELL` environmental variable has path to the currently used shell
+
+## Getting to the command line
+
+- Remote access, SSH, **PuTTY** (http://www.chiark.greenend.org.uk/~sgtatham/putty/), **MobaXterm** (https://mobaxterm.mobatek.net/)
+
+- **Mac OS X + Xcode development suite** (free, https://developer.apple.com/xcode/) + **X11 server** (free, https://www.xquartz.org/) + **iTerm2** (optional, https://iterm2.com/)
+
+- **Ubuntu Linux** (long-term support LTS version, XX.04, http://www.ubuntu.com/download/desktop)
+
+## Getting to the command line | Windows users   
+
+- **Windows Subsystem for Linux**, https://github.com/sirredbeard/Awesome-WSL
+
+- **Cygwin**, http://www.cygwin.com/
+
+- **Git Bash**, https://git-for-windows.github.io/ 
+
+- Boot from a CD or USB (search for "linux usb")
+
+- Install the whole Linux systems as a Virtual Machine in **VirtualBox**, https://www.virtualbox.org/
+
+## Getting to the command line | Mac users  
+
+- "Terminal" is already installed, `bash` shell
+
+- Why? Darwin, the system on which Apple's Mac OS X is built, is a derivative of 4.4 BSD-Lite2 and FreeBSD. In other words, the Mac is a Unix system
+
+- For X11 (graphics), see XQuartz, http://xquartz.macosforge.org/landing/
+
+- `iTerm2` - a better terminal replacement for Mac, https://www.iterm2.com/
+
+## Obtaining new command-line software
+
+- Modern Unix systems have package managers to that download install (free) software for you
+
+- On a Mac, **Homebrew** (http://brew.sh/) is a popular package-management system (alternatively, **MacPorts**, https://www.macports.org/)
+
+- On Ubuntu, **apt** (https://itsfoss.com/apt-get-linux-guide/) is the standard package manager, with both a command-line and graphical interface available
+
+- On Windows, **Cygwin** (https://cygwin.com/install.html) installs everything precompiled through its setup file. Do not delete `setup-x86_64.exe` file after installing Cygwin, explore what Linux tools are available (a lot)
+--&gt;
+
+---
+## Interacting with shell
+
+- Most commands take additional arguments that fine tune their behavior
+
+- If you don't know what a command does, use the command `man &lt;command&gt;`
+
+- Press `q` to quit the `man` page viewer
+
+- Most often, you’ll use `&lt;command&gt; -h` or `&lt;command&gt; --help`
+
+- Some commands output help if executed without any arguments
+
+---
+## File paths: change directory (`cd`)
+
+&lt;center&gt;&lt;img src="img/file_paths.png" height="330px" /&gt;&lt;/center&gt;
+
+- `cd /` - go to the root directory
+- `cd /usr/home/jack/bin` - go to the user’s sub-directory
+- `cd ..` - go to the upper level directory
+- `cd`, or `cd ~` - go to the user’s home directory
+- `cd --` - go to the last visited directory
+
+---
+## Orienting in the filesystem: print working directory (`pwd`)
+
+
+``` bash
+pwd
+```
+
+```
+## /Users/mdozmorov/Documents/Work/Teaching/BIOS524.2024
+```
+
+
+- `ls` 			- list all files in the current directory
+
+``` bash
+ls
+```
+
+```
+## 10_Getting_started.Rmd
+## 10_Getting_started.html
+## 11_RStudio.Rmd
+## 11_RStudio.html
+## 12_Functions_packages.Rmd
+## 12_Functions_packages.html
+## 13_Data.Rmd
+## 13_Data.html
+## 21_R_basics.Rmd
+## 21_R_basics.html
+## 22_R_data_frames.Rmd
+## 22_R_data_frames.html
+## 23_Text.Rmd
+## 23_Text.html
+## 24_R_graphics.Rmd
+## 24_R_graphics.html
+## 24_R_graphics_files
+## 31_Unix.Rmd
+## 31_Unix.html
+## 51_RMarkdown.Rmd
+## 51_RMarkdown.html
+## 52_Bibliography.Rmd
+## 52_Bibliography.html
+## 53_MathJax.Rmd
+## 53_MathJax.html
+## 61_Tidyverse_dplyr.Rmd
+## 61_Tidyverse_dplyr.html
+## 71_Tidyverse_ggplot2.Rmd
+## 71_Tidyverse_ggplot2.html
+## 71_Tidyverse_ggplot2_files
+## 81_Packages.Rmd
+## 81_Packages.html
+## 82_Packages.Rmd
+## 82_Packages.html
+## A-very-short-introduction-to-R
+## BIOS524.2024.Rproj
+## BIOS524Dozmorov
+## BIOS524_2021
+## BIOS524_2022
+## BIOS524_2022_leroy
+## ESP4R
+## IntroR
+## LWSP4R
+## LeKang
+## README.md
+## SAS-Programmer-Specialization
+## SAS_9.4_Cert Prep
+## Temporary.Rmd
+## img
+## libs
+## xaringan-my.css
+## xaringan-themer.css
+```
+
+&lt;!--
+- `ls -1` 	- list files in _one_ column
+
+- `ls –lah`	- list files in `l`ong, `h`uman readable format, include `a`ll content, user, owner, permissions
+--&gt;
+
+---
+## Creating, moving, copying, and removing files
+
+- `touch &lt;file&gt;` - creates an empty file
+
+- `nano &lt;file&gt;` - edit it
+
+- `mkdir &lt;dirname&gt;` - creates a directory
+
+- `cp &lt;source_file&gt; &lt;target_file&gt;` - copy a file to another location/file
+
+- `mv &lt;source_file&gt; &lt;target_file&gt;` - move a file
+
+- `rm &lt;file&gt;` - remove a file. If multiple files provided, removes all of them
+
+- `rm –r &lt;dirname&gt;` - recursive removal (deletes a directory)
+
+---
+## Permissions: `chmod`, `chown` and `chgrp`
+
+In Unix, every file and directory has an **owner** and a **group**  
+
+- `Owner` - is the one who created a file/directory
+
+
+- `Group` - defines rules of file operations and/or permissions
+
+&lt;!-- - `Every` - user on a Unix machine can belong to one or more groups --&gt;
+
+Every file has **three permission levels**   
+
+- what the **u**ser can do
+- what the **g**roup can do
+- what the **a**ll (everyone) can do
+
+---
+## Understanding ls -lah output
+
+- The first symbol indicates a regular file ("-") or a directory ("d")
+- The first three positions (after the "-" or "d") designate owner's permissions
+- The second three positions designate permissions for the group
+- The last three positions are for the world/anyone
+- The number before the user name indicates the levels of directories
+- Username/groupname indicate the owner/group of the file
+
+
+
+``` bash
+ls -lah
+```
+
+```
+## total 1184
+## drwxr-xr-x@  58 mdozmorov  staff   1.8K Jul 17 13:57 .
+## drwxr-xr-x   43 mdozmorov  staff   1.3K Apr 29 15:24 ..
+## -rw-r--r--@   1 mdozmorov  staff   5.7K Jul 10 11:40 .Rhistory
+## drwxr-xr-x@   4 mdozmorov  staff   128B May 28 13:58 .Rproj.user
+## drwxr-xr-x@  12 mdozmorov  staff   384B Jul 17 14:03 .git
+## -rw-r--r--@   1 mdozmorov  staff   160B Jun  7 21:16 .gitignore
+## -rw-r--r--@   1 mdozmorov  staff   4.8K Jul  1 10:04 10_Getting_started.Rmd
+## -rw-r--r--@   1 mdozmorov  staff   9.3K Jul  1 10:04 10_Getting_started.html
+## -rw-r--r--@   1 mdozmorov  staff    12K Jul  1 10:22 11_RStudio.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    17K Jul 17 13:44 11_RStudio.html
+## -rw-r--r--@   1 mdozmorov  staff   9.7K Jun  6 11:28 12_Functions_packages.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    14K Jul 17 13:44 12_Functions_packages.html
+## -rw-r--r--@   1 mdozmorov  staff   6.7K Jun 18 15:40 13_Data.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    12K Jul 17 13:44 13_Data.html
+## -rwxr-xr-x@   1 mdozmorov  staff    12K Jun 23 10:18 21_R_basics.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    19K Jul 17 13:49 21_R_basics.html
+## -rwxr-xr-x@   1 mdozmorov  staff   9.0K Jun 23 11:04 22_R_data_frames.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    15K Jul 17 13:50 22_R_data_frames.html
+## -rwxr-xr-x@   1 mdozmorov  staff   5.5K Jun 22 11:17 23_Text.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    11K Jul 17 13:51 23_Text.html
+## -rw-r--r--    1 mdozmorov  staff   6.6K Jul  1 13:18 24_R_graphics.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    11K Jul 17 13:57 24_R_graphics.html
+## drwxr-xr-x    3 mdozmorov  staff    96B Jun 23 11:34 24_R_graphics_files
+## -rw-r--r--    1 mdozmorov  staff    13K Jun 26 16:06 31_Unix.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    22K Jun 26 14:45 31_Unix.html
+## -rwxr-xr-x    1 mdozmorov  staff    16K Jun 22 15:56 51_RMarkdown.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    20K Jun 22 15:56 51_RMarkdown.html
+## -rwxr-xr-x    1 mdozmorov  staff   4.4K Jun 22 15:56 52_Bibliography.Rmd
+## -rw-r--r--@   1 mdozmorov  staff   8.9K Jun 22 15:56 52_Bibliography.html
+## -rwxr-xr-x    1 mdozmorov  staff   4.7K Jun 23 09:07 53_MathJax.Rmd
+## -rw-r--r--@   1 mdozmorov  staff   9.3K Jun 23 09:07 53_MathJax.html
+## -rwxr-xr-x    1 mdozmorov  staff    16K Jun 27 15:51 61_Tidyverse_dplyr.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    23K Jun 27 15:51 61_Tidyverse_dplyr.html
+## -rwxr-xr-x    1 mdozmorov  staff    18K Jul  9 14:49 71_Tidyverse_ggplot2.Rmd
+## -rw-r--r--@   1 mdozmorov  staff   108K Jul  9 14:50 71_Tidyverse_ggplot2.html
+## drwxr-xr-x    3 mdozmorov  staff    96B Jul  1 14:58 71_Tidyverse_ggplot2_files
+## -rwxr-xr-x    1 mdozmorov  staff   9.0K Jul 10 09:23 81_Packages.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    13K Jul 10 09:23 81_Packages.html
+## -rwxr-xr-x    1 mdozmorov  staff    10K Jul 10 09:54 82_Packages.Rmd
+## -rw-r--r--@   1 mdozmorov  staff    15K Jul 10 09:54 82_Packages.html
+## drwxr-xr-x   13 mdozmorov  staff   416B Apr 11 07:08 A-very-short-introduction-to-R
+## -rw-r--r--@   1 mdozmorov  staff   204B Jul 17 13:28 BIOS524.2024.Rproj
+## drwxr-xr-x   11 mdozmorov  staff   352B Apr 11 07:08 BIOS524Dozmorov
+## drwx------   25 mdozmorov  staff   800B Apr 11 07:08 BIOS524_2021
+## drwx------   22 mdozmorov  staff   704B Apr 11 07:08 BIOS524_2022
+## drwx------   46 mdozmorov  staff   1.4K Apr 11 07:08 BIOS524_2022_leroy
+## drwxr-xr-x    3 mdozmorov  staff    96B Apr 11 07:08 ESP4R
+## drwxr-xr-x    8 mdozmorov  staff   256B Apr 11 07:08 IntroR
+## drwxr-xr-x  127 mdozmorov  staff   4.0K Apr 11 07:08 LWSP4R
+## drwxr-xr-x    8 mdozmorov  staff   256B Apr 11 07:08 LeKang
+## -rw-r--r--@   1 mdozmorov  staff   2.9K Jul 17 13:58 README.md
+## drwxr-xr-x    8 mdozmorov  staff   256B Apr 11 07:08 SAS-Programmer-Specialization
+## drwxr-xr-x    7 mdozmorov  staff   224B Apr 11 07:08 SAS_9.4_Cert Prep
+## -rw-r--r--@   1 mdozmorov  staff    69B May 29 14:04 Temporary.Rmd
+## drwxr-xr-x   59 mdozmorov  staff   1.8K Jul  7 20:56 img
+## drwxr-xr-x@  12 mdozmorov  staff   384B Jul 17 13:57 libs
+## -rw-r--r--    1 mdozmorov  staff   131B Apr 11 07:08 xaringan-my.css
+## -rw-r--r--@   1 mdozmorov  staff   7.0K Jul 17 14:03 xaringan-themer.css
+```
+
+&lt;!--
+## Understanding ls -lah output
+
+- The first column tells you about permissions
+    - The very first character in the permissions column tells you what kind of file it is. A **-** means it's a regular file. A **d** means it's a directory
+    - The next nine characters come in three classes, each has three characters. The three classes are `owner`/`group`/`world` permissions
+    - Inside a permission class, **r** means that class can **r**ead the file; **w** means that class can **w**rite the file; **x** means that class can e**x**ecute the file
+
+- The second column has the number of files (inside a directory)
+- The third and fourth columns tell you the owner and group
+--&gt;
+
+---
+## Finding your files
+
+- `find` - lists all files under the working directory (and its subdirectories) based on arbitrary criteria
+
+- `find .` - prints the name of every file or directory, recursively. Starts from the current directory
+
+- `find . –type f` - finds files only
+
+- `find . –type d –maxdepth 1` - finds directories only, at most 1 level down
+
+- `find . –type f –name "*.mp3"` - finds only *.mp3 files
+
+- `find . -type f -name "README.md" -exec wc -l {} \;` - find files and execute a command on them
+
+---
+## Wildcards and patterns
+
+Regular expression metacharacters are used in command line
+
+- `*` - matches any character
+
+- `?` - matches a single character
+
+- `[chars]` - matches any character in chars
+
+- `[a-zA-Z]` - matches any character between `a` and `z`, including capital letters
+
+- `ls *.md`
+
+- `ls [Rt]*`
+
+---
+## Looking inside files
+
+- `cat &lt;file&gt;` - prints out content of a file. If multiple files, consequently prints out all of them (concatenates)
+  - `head/tail &lt;file&gt;` - prints first/last 10 lines
+
+&lt;!-- - `zcat` - prints out content of gzipped files --&gt;
+
+- `less &lt;file&gt;` - shows the content of the file one screen at a time
+
+**Keyboard shortcuts for `less` command**  
+
+- `space` - forward, `b` - backward
+- `g` - go to the beginning, `G` - go to the end
+- `/&lt;text&gt;` - starts forward search, enter to find next instance
+- `q` - quit
+
+---
+## Chaining commands: pipes
+
+- One of the most useful capabilities of Unix is the ability to redirect the STDOUT of one command into the STDIN of another
+
+- The `|` (pipe) character feeds output from the first program (to the left of the `|`) as input to the second program on the right. Therefore, you can string all sorts of commands together using the pipe
+
+```
+find . -type f -name "*.mp3" | wc -l
+cat names.txt | sort | uniq -c
+```
+
+- Executing one command AFTER another completed successfully: `&lt;command&gt; &amp;&amp; &lt;command&gt;`
+
+```
+mkdir music &amp;&amp; mv *.mp3 music/
+```
+
+&lt;!--
+## Chaining commands: redirections
+
+- Nearly every command in Unix makes use of a convention to have a "standard input" (also called stdin or STDIN, or channel 0) and "standard output" (also called stdout or STDOUT, or channel 1)
+
+- There is also a "standard error" (stderr or STDERR, or channel 2) output that is, by convention, reserved for error messages
+
+- `find / 2&gt; error.log` - capture STDERR into a file
+- `find / 2&gt; /dev/null` - suppress STDERR messages
+- `find / 2&gt;&amp;1` - add STDERR to STDOUT
+
+## Chaining commands: redirections
+
+- If you want to dump the standard output into a file, use `command &gt; file` (overwrites the file). `command &gt;&gt; file` (appends to the file)
+
+- Redirection example: `ls &gt; README.md` - save file list in the current directory into README.md file
+
+- Redirection works in another direction: `grep CC0 &lt; License.md`
+
+- Or, the content of a commant into another command: `join &lt;(sort file1) &lt;(sort file2)`
+--&gt;
+
+---
+## Other essential commands
+
+|           |          |
+|-----------|----------|
+| head/tail | cut      |
+| for       | comm     |
+| sort      | echo     |
+| uniq      | basename |
+| wc        | dirname  |
+| tr        | history  |
+| grep      | which    |
+| join      | who      |
+| kill      | grep     |
+| tar       | seq      |
+| gzip      | paste    |
+
+&lt;!--
+## Statistical command line goodies
+
+**data_hacks**, https://github.com/bitly/data_hacks
+
+- Command line tools for data analysis
+- `histogram.py`
+- `bar_chart.py`
+- `sample.py`
+
+**datamash**, https://www.gnu.org/software/datamash/
+
+- summary statistics
+- transposing matrixes
+
+
+## Learn more 
+
+- https://www.tutorialspoint.com/unix/index.htm
+
+- Heng Li's "A Bioinformatician's UNIX Toolbox", http://lh3lh3.users.sourceforge.net/biounix.shtml
+
+- Bioinformatics one-liners by Stephen Turner, https://github.com/stephenturner/oneliners
+
+- Collection of bioinformatics-genomics bash one liners, using awk, sed etc. https://github.com/crazyhottommy/bioinformatics-one-liners
+
+- Links and references to many genomics and bioinformatics resources, https://github.com/crazyhottommy/getting-started-with-genomics-tools-and-resources
+--&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -19,7 +19,7 @@ Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous
 
 ## Week 3
 
-- [31_Unix](https://dozmorovlab.github.io/BIOS524_videos/31_Unix.html) - Introduction to Unix and command line
+- [31_Unix](https://dozmorovlab.github.io/BIOS524_videos/31_Unix.html) - Introduction to Unix and command line, navigating file system, working with files
 
 ## Week 5
 
