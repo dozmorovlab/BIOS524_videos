@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ggplot2, data visualization</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding-4.10.4/plotly.js"></script>
+    <script src="libs/typedarray-0.1/typedarray.min.js"></script>
+    <script src="libs/jquery-3.5.1/jquery.min.js"></script>
+    <link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# ggplot2, data visualization
+]
+
+---
+
+
+
+
+
+
+## Why visualize data?
+
+- Anscombe's quartet comprises four datasets that have nearly identical simple descriptive statistics, yet appear very different when graphed. (See Wikipedia link below)
+
+- 11 observations (x, y) per group
+
+.center[&lt;img src="img/anscombe01.png" width = 800&gt;]
+
+.small[ https://en.wikipedia.org/wiki/Anscombe%27s_quartet ]
+
+---
+## Why visualize data?
+
+- Four groups
+
+- 11 observations (x, y) per group
+
+.center[&lt;img src="img/anscombe02.png" width = 500&gt;]
+
+.small[ https://en.wikipedia.org/wiki/Anscombe%27s_quartet ]
+
+---
+## Why visualized data?
+
+.center[&lt;img src="https://camo.githubusercontent.com/ea2bdad4fd739aad561e69795329408fc4303151caf590507432926504978fe9/68747470733a2f2f64616d6173736574732e6175746f6465736b2e6e65742f636f6e74656e742f64616d2f6175746f6465736b2f72657365617263682f7075626c69636174696f6e732d6173736574732f676966732f73616d652d73746174732d646966666572656e742d6772617068732f44696e6f53657175656e7469616c536d616c6c65722e676966" width = 4000px&gt;]
+
+.small[ https://github.com/stephlocke/datasauRus ]
+
+---
+## Evolution of R graphics
+
+- Base graphics
+
+- Trellis plots
+    - `lattice` package
+    - Better design principles, choice of colors, symbol shapes, line styles
+    - Known for distinct multi-panel layout
+
+- ggplot2 package
+    - Implements Grammar of Graphics, developed by Leland Wilkinson
+
+---
+class: inverse, center, middle
+
+# ggplot2 - the grammar of graphics
+
+---
+## ggplot2 package
+
+- `ggplot2` is a popular R package that extends R's visualization capabilities. It takes the hassle out of things like creating legends, mapping other variables to scales like color, or faceting plots
+
+- _Where does the "gg" in ggplot2 come from?_ The `ggplot2` package provides an R implementation of Leland Wilkinson's *Grammar of Graphics* (1999)
+    - The *Grammar of Graphics* allows you to think beyond the variety of plot types (e.g. scatterplot, barplot) and consider the components that make up a plot or graphic, such as how data are represented on the plot (as lines, points, etc.), how variables are mapped to coordinates or plotting shape or color, what transformation or statistical summary is required, and so on
+
+.small[ https://ggplot2.tidyverse.org/ ]
+
+&lt;!--
+## The basics of ggplot2 graphics
+
+Specifically, **ggplot2** allows you to build a plot layer-by-layer by specifying:
+
+- **aesthetics** that map variables in the data to axes on the plot or to plotting size, shape, color, etc.,
+
+- a **geom**, which specifies how the data are represented on the plot (points, lines, bars, etc.),
+
+- a **stat**, a statistical transformation or summary of the data applied prior to plotting,
+
+- **facets**, which we've already seen above, that allow the data to be divided into chunks on the basis of other categorical or continuous variables and the same plot drawn for each chunk.
+--&gt;
+
+---
+## The three basic components of ggplot2 graphics
+
+- Data (in a long format) mapped to graphical elements 
+- Add graphical layers and transformations
+- Commands are chained with "+" sign
+
+| Object     |       | Description                                                        |
+|------------|-------|--------------------------------------------------------------------|
+| Data       |       | The raw data that you want to plot                                 |
+| Aethetics  | aes() | How to map your columns on x, y axis, color, size, shape (aesthetics) |
+| Geometries | geom_ | The geometric shapes that will represent the data                  |
+
+``` text
+data +   
+aesthetic mappings of columns to plot coordinates +  
+geometry to represent the data
+```
+
+---
+## Basic ggplot2 syntax
+
+**Specify data, aesthetics and geometric shapes** 
+
+`ggplot(data, aes(x=, y=, color=, shape=, size=, fill=)) +`   
+`geom_point()`, or `geom_histogram()`, or `geom_boxplot()`, etc.   
+
+- This combination is very effective for exploratory graphs
+
+- The data must be a data frame in a **long** (not wide) format
+
+- The `aes()` function maps **columns** of the data frame to aesthetic properties of geometric shapes to be plotted.
+
+- `ggplot()` defines the plot; the `geoms` show the data; layers are added with `+` 
+
+---
+## Examples of ggplot2 graphics
+
+
+``` r
+diamonds %&gt;% filter(cut == "Good", color == "E") %&gt;% 
+  ggplot(aes(x = price, y = carat)) +
+  geom_point()  # aes(size = price) +
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+## Examples of ggplot2 graphics
+
+Try other geoms
+
+``` r
+  geom_smooth() # method = lm
+  geom_line()
+  geom_boxplot()
+  geom_bar(stat="identity")
+  geom_histogram()
+```
+
+---
+## Moving beyond `ggplot` + `geoms`
+
+- Scales control the mapping between data values and visual properties (aesthetics) such as position, color, size, shape, and transparency
+
+- Position Scales:
+  - scale_x_continuous(), scale_y_continuous(): For continuous x/y axes
+  - scale_x_discrete(), scale_y_discrete(): For discrete x and y axes
+  - scale_x_date(), scale_y_date(): For date/time x and y axes
+
+- Color Scales:
+  - scale_color_continuous(), scale_fill_continuous(): For continuous color gradients
+  - scale_color_discrete(), scale_fill_discrete(): For discrete color palettes
+  - Predefined color scales like scale_color_brewer(), scale_fill_brewer() for ColorBrewer palettes
+
+- Size Scales, Shape Scales, Transparency (Alpha) Scales:
+
+.small[ https://CRAN.R-project.org/package=ggsci R package for Scientific Journal and Sci-Fi Themed Color Palettes ]
+
+---
+## ggplot2 example - update scale for y-axis
+
+
+``` r
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width, 
+                 color=Species)) + geom_point() +
+  scale_y_continuous(limits=c(0,5), breaks=seq(0,5,0.5))
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+## ggplot2 example - update scale for color
+
+
+``` r
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width, 
+                 color=Species)) + geom_point() +
+  scale_color_manual(name="Iris Species", 
+                     values=c("red","blue","black"))
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+## Split plots
+
+* Sometimes, one needs to create separate plots of subsets of data. These are called facets in ggplot2
+
+* Use `facet_wrap()` if you want to facet by one variable and have `ggplot2` control the layout. Think 1D ribbon wrapped into 2D. Example:   
+     + `facet_wrap( ~ var)`
+
+- Use `facet_grid()` if you want to facet by one and/or two variables and control layout yourself. Think 2D grid. Examples:    
+    + `facet_grid(. ~ var1)` - facets in columns   
+    + `facet_grid(var1 ~ .)` - facets in rows   
+    + `facet_grid(var1 ~ var2)` - facets in rows and columns   
+
+---
+## ggplot2 example - `facet_wrap` 
+
+Note the ranges of X axes are different
+
+
+``` r
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width)) + 
+  geom_point() + geom_smooth(method="lm") +
+  facet_wrap(~ Species, scales = "free_x")
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+## `gridExtra` R package for more custom plot arrangement
+
+
+``` r
+library(gridExtra)
+p1 &lt;- iris %&gt;% filter(Species == "setosa") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+p2 &lt;- iris %&gt;% filter(Species == "versicolor") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+grid.arrange(p1, p2, ncol = 2)
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+## `patchwork` for simple plot arrangement
+
+
+``` r
+library(patchwork)
+p1 &lt;- iris %&gt;% filter(Species == "setosa") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+p2 &lt;- iris %&gt;% filter(Species == "versicolor") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+p3 &lt;- iris %&gt;% filter(Species == "virginica") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+p1 + p2 + p3
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+.small[ https://patchwork.data-imaginist.com/ ]
+
+---
+## `patchwork` for simple plot arrangement
+
+
+``` r
+library(patchwork)
+p1 &lt;- iris %&gt;% filter(Species == "setosa") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+p2 &lt;- iris %&gt;% filter(Species == "versicolor") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+p3 &lt;- iris %&gt;% filter(Species == "virginica") %&gt;% ggplot(aes(x = Sepal.Length, y = Sepal.Width)) + geom_smooth()
+(p1 | p2) / p3
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+.small[ https://patchwork.data-imaginist.com/ ]
+
+---
+## stat functions
+
+- All `geoms` perform a default statistical transformation. 
+
+- For example, `geom_histogram()` bins the data before plotting. `geom_smooth()` fits a line through the data according to a specified method.
+
+- In some cases the transformation is the "identity", which just means plot the raw data. For example, `geom_point()`
+
+- These transformations are done by `stat` functions. The naming scheme is `stat_` followed by the name of the transformation. For example, `stat_bin`, `stat_smooth`, `stat_boxplot`
+
+- **Every geom has a default stat, every stat has a default geom**
+
+---
+## Example of `stat="identity"`
+
+
+``` r
+# ToothGrowth describes the effect of Vitamin C on Tooth growth in Guinea pigs
+df &lt;- data.frame(dose = c("D0.5", "D1", "D2"),
+                  len = c(4.2, 10, 29.5))
+ggplot(data=df, aes(x=dose, y=len)) +
+  geom_bar(stat="identity")
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+&lt;!---
+## Rotating plots
+
+
+``` r
+# Horizontal bar plot
+ggplot(data=df, aes(x=dose, y=len)) +
+  geom_bar(stat="identity") +
+  coord_flip()
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+.small[ http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization ]
+--&gt;
+
+---
+## Update visual themes and labels
+
+* The default ggplot2 theme is excellent. It follows the advice of several landmark papers regarding statistics and visual perception. (Wickham 2009, p. 141)
+
+* However you can change the theme using ggplot2's themeing system. To date, there are seven built-in themes: `theme_gray` (_default_), `theme_bw`, `theme_linedraw`, `theme_light`, `theme_dark`, `theme_minimal`, `theme_classic`
+
+* Explore the `cowplot` R package by Claus Wilke, and its themes `theme_cowplot()`, `theme_half_open()`, `theme_minimal_grid()`, etc.
+
+* You can also update axis labels and titles using the `labs` function
+
+.small[https://wilkelab.org/cowplot/index.html]
+
+---
+## ggplot2 example - update labels
+
+
+``` r
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width, 
+                 color=Species)) + geom_point() +
+  labs(title="Sepal vs. Petal", 
+       x="Petal Width (cm)", y="Sepal Width (cm)") 
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+---
+## ggplot2 example - change theme
+
+
+``` r
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width, 
+                 shape=Species)) + geom_point() +
+  theme_bw()
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+## `cowplot` - publication-quality plots
+
+
+``` r
+library(cowplot)
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width, 
+                 shape=Species, color = Species)) + geom_point() +
+  theme_cowplot()
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+.small[ https://CRAN.R-project.org/package=cowplot ]
+
+---
+## `cowplot` - publication-quality plots
+
+
+``` r
+library(cowplot)
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Width, 
+                 shape=Species, color = Species)) + geom_point() +
+  theme_minimal_grid()
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+.small[ https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html ]
+
+---
+## `cowplot` - publication-quality plots
+
+
+``` r
+library(cowplot)
+p1 &lt;- ggplot(mtcars, aes(disp, mpg)) + geom_point()
+p2 &lt;- ggplot(mtcars, aes(qsec, mpg)) + geom_point()
+
+plot_grid(p1, p2, labels = c('A', 'B'), label_size = 12)
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+&lt;!--
+## Barplot (ggplot2 counting)
+
+
+``` r
+data(mpg)
+ggplot(mpg, aes(x = class)) + geom_bar()
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+.small[ https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html ]
+
+
+## Barplot (using stat identity)
+
+
+``` r
+class_agg &lt;- data.frame(table(mpg$class))
+colnames(class_agg) &lt;- c("class", "count")
+ggplot(class_agg, aes(x = class, y = count)) + 
+  geom_bar(aes(fill = class), stat = "identity")
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+--&gt;
+
+---
+## Horizontal Barplot
+
+Map data directly to the proper axes. Previously, `coord_flip()` was used
+
+
+``` r
+class_agg &lt;- data.frame(table(mpg$class))
+names(class_agg) &lt;- c("class", "count")
+ggplot(class_agg, aes(x = count, y = class)) + 
+  geom_bar(aes(fill = class), stat = "identity")
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+
+---
+## Reorder levels using forcats
+
+
+``` r
+library(forcats)
+class_agg &lt;- data.frame(table(mpg$class))
+names(class_agg) &lt;- c("class", "count")
+
+ggplot(class_agg, aes(x = count, y = fct_reorder(class, count))) + 
+  geom_bar(aes(fill = class), stat = "identity")
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+
+.small[ https://forcats.tidyverse.org/reference/index.html ]
+
+---
+## Density plot
+
+
+``` r
+ggplot(mpg, aes(x = hwy)) + geom_density()
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+
+---
+## Histogram
+
+
+``` r
+ggplot(mpg, aes(x = hwy)) +
+  geom_histogram() +
+  geom_density(aes(y=2 * ..count..))
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+
+---
+## Stacked histogram
+
+
+``` r
+ggplot(mpg, aes(x = hwy, fill = class)) + 
+  geom_histogram(position = "stack")
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+
+---
+## Side-by-side histogram
+
+
+``` r
+ggplot(mpg, aes(x = hwy, fill = class)) + 
+  geom_histogram(position = "dodge")
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+---
+## Proportions
+
+
+``` r
+# useful for assessing percentages
+ggplot(mpg, aes(x = hwy, fill = class)) + 
+  geom_histogram(position = "fill")
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+
+
+---
+## Smoothing
+
+
+``` r
+ggplot(iris, aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_smooth() +
+  geom_smooth(method = "lm", color = "seagreen", se=FALSE)
+```
+
+```
+## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+---
+## Additional aesthetic mapping
+
+
+``` r
+ggplot(iris, aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point(aes(color = Species))
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+
+---
+## Summary: Fine tuning ggplot2 graphics
+
+| Parameter                   |        | Description                                                                                                                     | 
+|-----------------------------|--------|---------------------------------------------------------------------------------------------------------------------------------| 
+| Facets                      | facet_ | Split one plot into multiple plots based on a grouping variable                                                                 | 
+| Scales                      | scale_ | Maps between the data ranges and the dimensions of the plot                                                                     | 
+| Visual Themes               | theme  | The overall visual defaults of a plot: background, grids, axe, default typeface, sizes, colors, etc.                            | 
+| Statistical transformations | stat_  | Statistical summaries of the data that can be plotted, such as quantiles, fitted curves (loess, linear models, etc.), sums etc. | 
+| Coordinate systems          | coord_ | Expressing coordinates in a system other than Cartesian                                                                         | 
+
+---
+## Putting it all together
+
+
+``` r
+diamonds %&gt;%                 # Start with the 'diamonds' dataset
+  filter(cut == "Ideal") %&gt;% # Then, filter rows where cut == Ideal
+  ggplot(aes(price)) +       # Then, plot using ggplot
+  geom_histogram() +         # and plot histograms
+  facet_wrap(~ color) +      # in a 'small multiple' plot, broken out by 'color' 
+  ggtitle("Diamond price distribution per color") +
+  labs(x="Price", y="Count") +
+  theme(panel.background = element_rect(fill="lightblue")) +
+  theme(plot.title = element_text(family="Trebuchet MS", size=28, face="bold", hjust=0, color="#777777")) +
+  theme(axis.title.y = element_text(angle=0)) +
+  theme(panel.grid.minor = element_blank())
+```
+
+---
+## Saving ggplot2 plots
+
+- `pdf()` (or any other graphical device, e.g., `jpeg`, `png`, `svg`) and `dev.off()` works
+
+- `ggsave()` saves the ggplot object (or, the latest plot) into a file. File extension defines the graphical device
+
+``` r
+p &lt;- ggplot(mpg, aes(x = class)) + geom_bar()
+ggsave(filename = "test.jpg", plot = p, width = 7, height = 10, 
+       units = c("in"), dpi = 300)
+```
+
+---
+## Plotly - interactive ggplots. plot.ly/ggplot2/
+
+
+``` r
+suppressMessages(library(plotly))
+p &lt;- ggplot(iris, aes(x = Sepal.Width, y = Petal.Width)) + 
+        geom_point(aes(color = Species))
+ggplotly(p)
+```
+
+<div class="plotly html-widget html-fill-item" id="htmlwidget-0538252264b31f6486f0" style="width:504px;height:252px;"></div>
+<script type="application/json" data-for="htmlwidget-0538252264b31f6486f0">{"x":{"data":[{"x":[3.5,3,3.2000000000000002,3.1000000000000001,3.6000000000000001,3.8999999999999999,3.3999999999999999,3.3999999999999999,2.8999999999999999,3.1000000000000001,3.7000000000000002,3.3999999999999999,3,3,4,4.4000000000000004,3.8999999999999999,3.5,3.7999999999999998,3.7999999999999998,3.3999999999999999,3.7000000000000002,3.6000000000000001,3.2999999999999998,3.3999999999999999,3,3.3999999999999999,3.5,3.3999999999999999,3.2000000000000002,3.1000000000000001,3.3999999999999999,4.0999999999999996,4.2000000000000002,3.1000000000000001,3.2000000000000002,3.5,3.6000000000000001,3,3.3999999999999999,3.5,2.2999999999999998,3.2000000000000002,3.5,3.7999999999999998,3,3.7999999999999998,3.2000000000000002,3.7000000000000002,3.2999999999999998],"y":[0.20000000000000001,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.40000000000000002,0.29999999999999999,0.20000000000000001,0.20000000000000001,0.10000000000000001,0.20000000000000001,0.20000000000000001,0.10000000000000001,0.10000000000000001,0.20000000000000001,0.40000000000000002,0.40000000000000002,0.29999999999999999,0.29999999999999999,0.29999999999999999,0.20000000000000001,0.40000000000000002,0.20000000000000001,0.5,0.20000000000000001,0.20000000000000001,0.40000000000000002,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.40000000000000002,0.10000000000000001,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.10000000000000001,0.20000000000000001,0.20000000000000001,0.29999999999999999,0.29999999999999999,0.20000000000000001,0.59999999999999998,0.40000000000000002,0.29999999999999999,0.20000000000000001,0.20000000000000001,0.20000000000000001,0.20000000000000001],"text":["Sepal.Width: 3.5<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.0<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.2<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.1<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.6<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.9<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 2.9<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.1<br />Petal.Width: 0.1<br />Species: setosa","Sepal.Width: 3.7<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.0<br />Petal.Width: 0.1<br />Species: setosa","Sepal.Width: 3.0<br />Petal.Width: 0.1<br />Species: setosa","Sepal.Width: 4.0<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 4.4<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 3.9<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 3.5<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 3.8<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 3.8<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.7<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 3.6<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.3<br />Petal.Width: 0.5<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.0<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 3.5<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.2<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.1<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 4.1<br />Petal.Width: 0.1<br />Species: setosa","Sepal.Width: 4.2<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.1<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.2<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.5<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.6<br />Petal.Width: 0.1<br />Species: setosa","Sepal.Width: 3.0<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.4<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.5<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 2.3<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 3.2<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.5<br />Petal.Width: 0.6<br />Species: setosa","Sepal.Width: 3.8<br />Petal.Width: 0.4<br />Species: setosa","Sepal.Width: 3.0<br />Petal.Width: 0.3<br />Species: setosa","Sepal.Width: 3.8<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.2<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.7<br />Petal.Width: 0.2<br />Species: setosa","Sepal.Width: 3.3<br />Petal.Width: 0.2<br />Species: setosa"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"setosa","legendgroup":"setosa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3.2000000000000002,3.2000000000000002,3.1000000000000001,2.2999999999999998,2.7999999999999998,2.7999999999999998,3.2999999999999998,2.3999999999999999,2.8999999999999999,2.7000000000000002,2,3,2.2000000000000002,2.8999999999999999,2.8999999999999999,3.1000000000000001,3,2.7000000000000002,2.2000000000000002,2.5,3.2000000000000002,2.7999999999999998,2.5,2.7999999999999998,2.8999999999999999,3,2.7999999999999998,3,2.8999999999999999,2.6000000000000001,2.3999999999999999,2.3999999999999999,2.7000000000000002,2.7000000000000002,3,3.3999999999999999,3.1000000000000001,2.2999999999999998,3,2.5,2.6000000000000001,3,2.6000000000000001,2.2999999999999998,2.7000000000000002,3,2.8999999999999999,2.8999999999999999,2.5,2.7999999999999998],"y":[1.3999999999999999,1.5,1.5,1.3,1.5,1.3,1.6000000000000001,1,1.3,1.3999999999999999,1,1.5,1,1.3999999999999999,1.3,1.3999999999999999,1.5,1,1.5,1.1000000000000001,1.8,1.3,1.5,1.2,1.3,1.3999999999999999,1.3999999999999999,1.7,1.5,1,1.1000000000000001,1,1.2,1.6000000000000001,1.5,1.6000000000000001,1.5,1.3,1.3,1.3,1.2,1.3999999999999999,1.2,1,1.3,1.2,1.3,1.3,1.1000000000000001,1.3],"text":["Sepal.Width: 3.2<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 3.2<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 3.1<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.3<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.8<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.8<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 3.3<br />Petal.Width: 1.6<br />Species: versicolor","Sepal.Width: 2.4<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.7<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 2.0<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.2<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 3.1<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.7<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 2.2<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.5<br />Petal.Width: 1.1<br />Species: versicolor","Sepal.Width: 3.2<br />Petal.Width: 1.8<br />Species: versicolor","Sepal.Width: 2.8<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.5<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.8<br />Petal.Width: 1.2<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 2.8<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.7<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.6<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 2.4<br />Petal.Width: 1.1<br />Species: versicolor","Sepal.Width: 2.4<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 2.7<br />Petal.Width: 1.2<br />Species: versicolor","Sepal.Width: 2.7<br />Petal.Width: 1.6<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 3.4<br />Petal.Width: 1.6<br />Species: versicolor","Sepal.Width: 3.1<br />Petal.Width: 1.5<br />Species: versicolor","Sepal.Width: 2.3<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.5<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.6<br />Petal.Width: 1.2<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.4<br />Species: versicolor","Sepal.Width: 2.6<br />Petal.Width: 1.2<br />Species: versicolor","Sepal.Width: 2.3<br />Petal.Width: 1.0<br />Species: versicolor","Sepal.Width: 2.7<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 3.0<br />Petal.Width: 1.2<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.9<br />Petal.Width: 1.3<br />Species: versicolor","Sepal.Width: 2.5<br />Petal.Width: 1.1<br />Species: versicolor","Sepal.Width: 2.8<br />Petal.Width: 1.3<br />Species: versicolor"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,186,56,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,186,56,1)"}},"hoveron":"points","name":"versicolor","legendgroup":"versicolor","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3.2999999999999998,2.7000000000000002,3,2.8999999999999999,3,3,2.5,2.8999999999999999,2.5,3.6000000000000001,3.2000000000000002,2.7000000000000002,3,2.5,2.7999999999999998,3.2000000000000002,3,3.7999999999999998,2.6000000000000001,2.2000000000000002,3.2000000000000002,2.7999999999999998,2.7999999999999998,2.7000000000000002,3.2999999999999998,3.2000000000000002,2.7999999999999998,3,2.7999999999999998,3,2.7999999999999998,3.7999999999999998,2.7999999999999998,2.7999999999999998,2.6000000000000001,3,3.3999999999999999,3.1000000000000001,3,3.1000000000000001,3.1000000000000001,3.1000000000000001,2.7000000000000002,3.2000000000000002,3.2999999999999998,3,2.5,3,3.3999999999999999,3],"y":[2.5,1.8999999999999999,2.1000000000000001,1.8,2.2000000000000002,2.1000000000000001,1.7,1.8,1.8,2.5,2,1.8999999999999999,2.1000000000000001,2,2.3999999999999999,2.2999999999999998,1.8,2.2000000000000002,2.2999999999999998,1.5,2.2999999999999998,2,2,1.8,2.1000000000000001,1.8,1.8,1.8,2.1000000000000001,1.6000000000000001,1.8999999999999999,2,2.2000000000000002,1.5,1.3999999999999999,2.2999999999999998,2.3999999999999999,1.8,1.8,2.1000000000000001,2.3999999999999999,2.2999999999999998,1.8999999999999999,2.2999999999999998,2.5,2.2999999999999998,1.8999999999999999,2,2.2999999999999998,1.8],"text":["Sepal.Width: 3.3<br />Petal.Width: 2.5<br />Species: virginica","Sepal.Width: 2.7<br />Petal.Width: 1.9<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.1<br />Species: virginica","Sepal.Width: 2.9<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.2<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.1<br />Species: virginica","Sepal.Width: 2.5<br />Petal.Width: 1.7<br />Species: virginica","Sepal.Width: 2.9<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 2.5<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.6<br />Petal.Width: 2.5<br />Species: virginica","Sepal.Width: 3.2<br />Petal.Width: 2.0<br />Species: virginica","Sepal.Width: 2.7<br />Petal.Width: 1.9<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.1<br />Species: virginica","Sepal.Width: 2.5<br />Petal.Width: 2.0<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 2.4<br />Species: virginica","Sepal.Width: 3.2<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.8<br />Petal.Width: 2.2<br />Species: virginica","Sepal.Width: 2.6<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 2.2<br />Petal.Width: 1.5<br />Species: virginica","Sepal.Width: 3.2<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 2.0<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 2.0<br />Species: virginica","Sepal.Width: 2.7<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.3<br />Petal.Width: 2.1<br />Species: virginica","Sepal.Width: 3.2<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 2.1<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 1.6<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 1.9<br />Species: virginica","Sepal.Width: 3.8<br />Petal.Width: 2.0<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 2.2<br />Species: virginica","Sepal.Width: 2.8<br />Petal.Width: 1.5<br />Species: virginica","Sepal.Width: 2.6<br />Petal.Width: 1.4<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 3.4<br />Petal.Width: 2.4<br />Species: virginica","Sepal.Width: 3.1<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 1.8<br />Species: virginica","Sepal.Width: 3.1<br />Petal.Width: 2.1<br />Species: virginica","Sepal.Width: 3.1<br />Petal.Width: 2.4<br />Species: virginica","Sepal.Width: 3.1<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 2.7<br />Petal.Width: 1.9<br />Species: virginica","Sepal.Width: 3.2<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 3.3<br />Petal.Width: 2.5<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 2.5<br />Petal.Width: 1.9<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 2.0<br />Species: virginica","Sepal.Width: 3.4<br />Petal.Width: 2.3<br />Species: virginica","Sepal.Width: 3.0<br />Petal.Width: 1.8<br />Species: virginica"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(97,156,255,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(97,156,255,1)"}},"hoveron":"points","name":"virginica","legendgroup":"virginica","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":30.611872146118724,"r":7.3059360730593621,"b":44.56621004566211,"l":43.105022831050235},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1.8799999999999999,4.5200000000000005],"tickmode":"array","ticktext":["2.0","2.5","3.0","3.5","4.0","4.5"],"tickvals":[2,2.5,3,3.5,4,4.5],"categoryorder":"array","categoryarray":["2.0","2.5","3.0","3.5","4.0","4.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Sepal.Width","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.01999999999999999,2.6200000000000001],"tickmode":"array","ticktext":["0.0","0.5","1.0","1.5","2.0","2.5"],"tickvals":[0,0.5,1,1.4999999999999998,2,2.5],"categoryorder":"array","categoryarray":["0.0","0.5","1.0","1.5","2.0","2.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Petal.Width","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Species","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"149c57897250a":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"149c57897250a","visdat":{"149c57897250a":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+``` r
+# Save with 
+# htmlwidgets::saveWidget(pp, "test_plotly.html")
+```
+
+.small[ [Plotly](https://geanders.github.io/RProgrammingForResearch/reporting-data-results-3.html#htmlwidgets) ]
+
+---
+## Interactive heatmaps
+
+
+``` r
+# BiocManager::install("talgalili/heatmaply")
+suppressMessages(library(heatmaply))
+suppressMessages(library(RColorBrewer))
+heatmaply(scale(mtcars), colors = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100))
+```
+
+<div class="plotly html-widget html-fill-item" id="htmlwidget-639e7b49903e87cde407" style="width:504px;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-639e7b49903e87cde407">{"x":{"data":[{"x":[6.4375,3.5625,null,3.5625,3.5625,null,3.5625,2.125,null,2.125,2.125,null,2.125,1,null,1,1,null,2.125,3.25,null,3.25,3.25,null,3.25,2.5,null,2.5,2.5,null,2.5,2,null,2,2,null,2.5,3,null,3,3,null,3.25,4,null,4,4,null,3.5625,5,null,5,5,null,6.4375,9.3125,null,9.3125,9.3125,null,9.3125,8.125,null,8.125,8.125,null,8.125,7.25,null,7.25,7.25,null,7.25,6.5,null,6.5,6.5,null,6.5,6,null,6,6,null,6.5,7,null,7,7,null,7.25,8,null,8,8,null,8.125,9,null,9,9,null,9.3125,10.5,null,10.5,10.5,null,10.5,10,null,10,10,null,10.5,11,null,11,11],"y":[10.760803006470665,10.760803006470665,null,10.760803006470665,6.124657898864549,null,6.124657898864549,6.124657898864549,null,6.124657898864549,4.5997424911210993,null,4.5997424911210993,4.5997424911210993,null,4.5997424911210993,0,null,4.5997424911210993,4.5997424911210993,null,4.5997424911210993,3.6001649469256272,null,3.6001649469256272,3.6001649469256272,null,3.6001649469256272,2.4645409160503045,null,2.4645409160503045,2.4645409160503045,null,2.4645409160503045,0,null,2.4645409160503045,2.4645409160503045,null,2.4645409160503045,0,null,3.6001649469256272,3.6001649469256272,null,3.6001649469256272,0,null,6.124657898864549,6.124657898864549,null,6.124657898864549,0,null,10.760803006470665,10.760803006470665,null,10.760803006470665,8.7322032417633721,null,8.7322032417633721,8.7322032417633721,null,8.7322032417633721,5.676472940567213,null,5.676472940567213,5.676472940567213,null,5.676472940567213,4.3155731739886862,null,4.3155731739886862,4.3155731739886862,null,4.3155731739886862,3.5732837648452591,null,3.5732837648452591,3.5732837648452591,null,3.5732837648452591,0,null,3.5732837648452591,3.5732837648452591,null,3.5732837648452591,0,null,4.3155731739886862,4.3155731739886862,null,4.3155731739886862,0,null,5.676472940567213,5.676472940567213,null,5.676472940567213,0,null,8.7322032417633721,8.7322032417633721,null,8.7322032417633721,3.9797993041574635,null,3.9797993041574635,3.9797993041574635,null,3.9797993041574635,0,null,3.9797993041574635,3.9797993041574635,null,3.9797993041574635,0],"text":["y: 10.760803","y: 10.760803",null,"y: 10.760803","y: 10.760803",null,"y:  6.124658","y:  6.124658",null,"y:  6.124658","y:  6.124658",null,"y:  4.599742","y:  4.599742",null,"y:  4.599742","y:  4.599742",null,"y:  4.599742","y:  4.599742",null,"y:  4.599742","y:  4.599742",null,"y:  3.600165","y:  3.600165",null,"y:  3.600165","y:  3.600165",null,"y:  2.464541","y:  2.464541",null,"y:  2.464541","y:  2.464541",null,"y:  2.464541","y:  2.464541",null,"y:  2.464541","y:  2.464541",null,"y:  3.600165","y:  3.600165",null,"y:  3.600165","y:  3.600165",null,"y:  6.124658","y:  6.124658",null,"y:  6.124658","y:  6.124658",null,"y: 10.760803","y: 10.760803",null,"y: 10.760803","y: 10.760803",null,"y:  8.732203","y:  8.732203",null,"y:  8.732203","y:  8.732203",null,"y:  5.676473","y:  5.676473",null,"y:  5.676473","y:  5.676473",null,"y:  4.315573","y:  4.315573",null,"y:  4.315573","y:  4.315573",null,"y:  3.573284","y:  3.573284",null,"y:  3.573284","y:  3.573284",null,"y:  3.573284","y:  3.573284",null,"y:  3.573284","y:  3.573284",null,"y:  4.315573","y:  4.315573",null,"y:  4.315573","y:  4.315573",null,"y:  5.676473","y:  5.676473",null,"y:  5.676473","y:  5.676473",null,"y:  8.732203","y:  8.732203",null,"y:  8.732203","y:  8.732203",null,"y:  3.979799","y:  3.979799",null,"y:  3.979799","y:  3.979799",null,"y:  3.979799","y:  3.979799",null,"y:  3.979799","y:  3.979799"],"type":"scatter","mode":"lines","line":{"width":2.2677165354330708,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[6.4375,3.5625,2.125,1,3.25,2.5,2,3,4,5,9.3125,8.125,7.25,6.5,6,7,8,9,10.5,10,11],"y":[10.760803006470665,6.124657898864549,4.5997424911210993,0,3.6001649469256272,2.4645409160503045,0,0,0,0,8.7322032417633721,5.676472940567213,4.3155731739886862,3.5732837648452591,0,0,0,0,3.9797993041574635,0,0],"text":["y: 10.760803","y:  6.124658","y:  4.599742","y:  0.000000","y:  3.600165","y:  2.464541","y:  0.000000","y:  0.000000","y:  0.000000","y:  0.000000","y:  8.732203","y:  5.676473","y:  4.315573","y:  3.573284","y:  0.000000","y:  0.000000","y:  0.000000","y:  0.000000","y:  3.979799","y:  0.000000","y:  0.000000"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"transparent","opacity":1,"size":null,"symbol":null,"line":{"width":1.8897637795275593,"color":"transparent"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"type":"scatter","mode":"markers","marker":{"color":"rgba(44,160,44,1)","line":{"color":"rgba(44,160,44,1)"}},"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"line":{"color":"rgba(44,160,44,1)"},"xaxis":"x2","yaxis":"y","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11],"y":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],"z":[[0.41727005943092316,0.35940932674097503,0.34784337088543954,0.24893228741918427,0.14783808499501405,0.18526328760825064,0.20840197765358048,0.060837902231231887,0.30354265094315996,0.5879335585500407,0.62941291855231929],[0.36803499350437757,0.41176423532597872,0.34784337088543954,0.26327170149461532,0.14783808499501405,0.18526328760825064,0.20840197765358048,0.17851919922146858,0.41120574890926193,0.5879335585500407,0.54358388420427606],[0.21731540393331963,0.1929841779359176,0.1276430360838266,0.22598922489849455,0.14783808499501405,0.18526328760825064,0.20840197765358048,0.40652671214005204,0.41446826702944689,0.5879335585500407,0.60630510161246176],[0.35497262907488591,0.22582498423014727,0.1276430360838266,0.22025345926832218,0.26957550142429776,0.45177072712074529,0.20840197765358048,0.48743260382083958,0.45688100259185072,0.5879335585500407,0.92431267759431512],[0.36301100718534229,0.23518540728019335,0.1276430360838266,0.12561332637047715,0.26957550142429776,0.45177072712074529,0.20840197765358048,0.4028491716091071,0.50908129251480927,0.5879335585500407,0.60520472937723024],[0.41325087037569497,0.26834351605069573,0.34784337088543954,0.30055417809073609,0.51305033428286517,0.45177072712074529,0.20840197765358048,0.48743260382083958,0.29375509658260518,0.5879335585500407,0.48416378350178402],[0.41325087037569497,0.26834351605069573,0.34784337088543954,0.30055417809073609,0.51305033428286517,0.45177072712074529,0.20840197765358048,0.48743260382083958,0.33943035026519391,0.5879335585500407,0.4181414493879046],[0.28061763155316394,0.19441203907914498,0.1276430360838266,0.26040381867952911,0.26957550142429776,0.45177072712074529,0.60245779210160577,0.55730587390879271,0.41120574890926193,0.5879335585500407,0.4511526164448445],[0.18817628328291511,0.17378737812141623,0.1276430360838266,0.21451769363814971,0.14783808499501405,0.45177072712074529,0.60245779210160577,0.46168982010422543,0.45688100259185072,0.5879335585500407,0.45225298868007563],[0.11080689396977211,0.12777851906186749,0.1276430360838266,0.13708485763082198,0.14783808499501405,0.45177072712074529,0.60245779210160577,0.54627325231595791,0.6036943180001717,0.5879335585500407,0.48416378350178402],[0.16406114895154589,0.12730256534745832,0.1276430360838266,0.13708485763082198,0.14783808499501405,0.45177072712074529,0.60245779210160577,0.54627325231595791,0.77008274212960204,0.5879335585500407,0.54688500090996972],[0.090710948693631041,0.11524507124909382,0.1276430360838266,0.13421697481573577,0.14783808499501405,0.45177072712074529,0.60245779210160577,0.59775881974918632,0.81902051393237574,0.5879335585500407,0.59420100702491674],[0.0464998690861207,0.12254302820336707,0.1276430360838266,0.096934498219615001,0.26957550142429776,0.45177072712074529,0.60245779210160577,0.85886419744627385,0.70483237972590385,0.5879335585500407,0.44234963856299364],[0.026002004904456807,0.15332136840182384,0.1276430360838266,0.27187534993987394,0.26957550142429776,0.71827816663324007,0.60245779210160577,0.43226949585666619,0.70483237972590385,0.5879335585500407,0.26408933645551846],[0.15200358178586126,0.19330148041219036,0.1276430360838266,0.20878192800797726,0.26957550142429776,0.71827816663324007,0.60245779210160577,0.67498717089902915,0.56128158243776793,0.19780661405768518,0.24208189175089204],[0.29970877956549796,0.25628602195233124,0.34784337088543954,0.26327170149461532,0.51305033428286517,0.45177072712074529,0.60245779210160577,0.48007752275894977,0.39815567642852234,0.19780661405768518,0.27729380327829456],[0.24846411911133834,0.25628602195233124,0.34784337088543954,0.26327170149461532,0.51305033428286517,0.45177072712074529,0.60245779210160577,0.48007752275894977,0.39815567642852234,0.19780661405768518,0.21567295810534029],[0.27860803702554993,0.23248833623187498,0.34784337088543954,0.44968408447521913,0.75652516714143259,0.71827816663324007,0.60245779210160577,0.37710638789249284,0.35574294086611846,0.19780661405768518,0.11003722352313278],[0.43937559923467828,0.47998426772462005,0.56804370568705242,0.90854533488901312,1,0.71827816663324007,0.60245779210160577,0.34768606364493371,0.20240458921742766,0.19780661405768518,0.01100372235231325],[0.3589918181301141,0.55930988679280758,0.56804370568705242,0.70492565501789206,0.51305033428286517,0.71827816663324007,0.60245779210160577,0.59775881974918632,0.22850473417890696,0.19780661405768518,0],[0.4936346514802592,0.55772337441144382,0.56804370568705242,0.65043588153125398,0.51305033428286517,0.18526328760825064,0.20840197765358048,0.41755933373288662,0.14694178117428419,0.19780661405768518,0.10013387340605086],[0.43937559923467828,0.57358849822508129,0.56804370568705242,0.65043588153125398,0.51305033428286517,0.18526328760825064,0.20840197765358048,0.22632722612375217,0.17956696237613329,0.19780661405768518,0.14744987952099789],[0.53985532561538374,0.44000415571425355,0.56804370568705242,0.46402349855065017,0.39131291785358141,0.18526328760825064,0.20840197765358048,0.17484165869052359,0.24807984290001639,0.19780661405768518,0.31910794821708488],[0.47152911167650402,0.44000415571425355,0.56804370568705242,0.46402349855065017,0.39131291785358141,0.18526328760825064,0.20840197765358048,0.17484165869052359,0.27744250598168063,0.19780661405768518,0.34111539292171172],[0.48157708431457452,0.44000415571425355,0.56804370568705242,0.46402349855065017,0.39131291785358141,0.18526328760825064,0.20840197765358048,0.17484165869052359,0.20892962545779747,0.19780661405768518,0.38513028233096469],[0.41224607311188793,0.48474380486871127,0.56804370568705242,0.37798701409806379,0.26957550142429776,0.18526328760825064,0.20840197765358048,0.20426198293808273,0.20892962545779747,0.19780661405768518,0.30810422586477182],[0.42932762659660784,0.50695497820780377,0.56804370568705242,0.37798701409806379,0.26957550142429776,0.18526328760825064,0.20840197765358048,0.060837902231231887,0.2187171798183522,0.19780661405768518,0.26078821974982475],[0.41325087037569497,0.57358849822508129,0.56804370568705242,0.44968408447521913,0.26957550142429776,0.18526328760825064,0.20840197765358048,0.20426198293808273,0.32311775966426937,0.19780661405768518,0.27729380327829456],[0.49463944874406629,0.63704899347963129,0.56804370568705242,0.44968408447521913,0.26957550142429776,0.18526328760825064,0.20840197765358048,0.17851919922146858,0.33943035026519391,0.19780661405768518,0.28059491998398867],[0.79607862788618211,0.7005094887341814,0.56804370568705242,0.60741763930496073,0.51305033428286517,0.18526328760825064,0.20840197765358048,0.23368230718564195,0.1926170348568729,0.19780661405768518,0.32130869268754786],[0.81195442465433365,0.73223973636145634,0.56804370568705242,0.5643993970786676,0.51305033428286517,0.18526328760825064,0.20840197765358048,0.14909887497390939,0.052328755688921806,0.19780661405768518,0.36532358209680083],[0.77698747987384809,0.75127788493782133,0.56804370568705242,0.53572056892780551,0.51305033428286517,0.18526328760825064,0.20840197765358048,0.1233560912572952,0.052328755688921806,0.19780661405768518,0.3829295378605021]],"text":[["row: Valiant<br>column: wt<br>value:  0.24809","row: Valiant<br>column: disp<br>value: -0.04617","row: Valiant<br>column: cyl<br>value: -0.10499","row: Valiant<br>column: hp<br>value: -0.60802","row: Valiant<br>column: carb<br>value: -1.12215","row: Valiant<br>column: gear<br>value: -0.93182","row: Valiant<br>column: am<br>value: -0.81414","row: Valiant<br>column: drat<br>value: -1.56461","row: Valiant<br>column: mpg<br>value: -0.33029","row: Valiant<br>column: vs<br>value:  1.11604","row: Valiant<br>column: qsec<br>value:  1.32699"],["row: Hornet 4 Drive<br>column: wt<br>value: -0.00230","row: Hornet 4 Drive<br>column: disp<br>value:  0.22009","row: Hornet 4 Drive<br>column: cyl<br>value: -0.10499","row: Hornet 4 Drive<br>column: hp<br>value: -0.53509","row: Hornet 4 Drive<br>column: carb<br>value: -1.12215","row: Hornet 4 Drive<br>column: gear<br>value: -0.93182","row: Hornet 4 Drive<br>column: am<br>value: -0.81414","row: Hornet 4 Drive<br>column: drat<br>value: -0.96612","row: Hornet 4 Drive<br>column: mpg<br>value:  0.21725","row: Hornet 4 Drive<br>column: vs<br>value:  1.11604","row: Hornet 4 Drive<br>column: qsec<br>value:  0.89049"],["row: Toyota Corona<br>column: wt<br>value: -0.76881","row: Toyota Corona<br>column: disp<br>value: -0.89255","row: Toyota Corona<br>column: cyl<br>value: -1.22486","row: Toyota Corona<br>column: hp<br>value: -0.72470","row: Toyota Corona<br>column: carb<br>value: -1.12215","row: Toyota Corona<br>column: gear<br>value: -0.93182","row: Toyota Corona<br>column: am<br>value: -0.81414","row: Toyota Corona<br>column: drat<br>value:  0.19346","row: Toyota Corona<br>column: mpg<br>value:  0.23385","row: Toyota Corona<br>column: vs<br>value:  1.11604","row: Toyota Corona<br>column: qsec<br>value:  1.20947"],["row: Merc 230<br>column: wt<br>value: -0.06873","row: Merc 230<br>column: disp<br>value: -0.72554","row: Merc 230<br>column: cyl<br>value: -1.22486","row: Merc 230<br>column: hp<br>value: -0.75387","row: Merc 230<br>column: carb<br>value: -0.50303","row: Merc 230<br>column: gear<br>value:  0.42355","row: Merc 230<br>column: am<br>value: -0.81414","row: Merc 230<br>column: drat<br>value:  0.60492","row: Merc 230<br>column: mpg<br>value:  0.44954","row: Merc 230<br>column: vs<br>value:  1.11604","row: Merc 230<br>column: qsec<br>value:  2.82675"],["row: Merc 240D<br>column: wt<br>value: -0.02785","row: Merc 240D<br>column: disp<br>value: -0.67793","row: Merc 240D<br>column: cyl<br>value: -1.22486","row: Merc 240D<br>column: hp<br>value: -1.23518","row: Merc 240D<br>column: carb<br>value: -0.50303","row: Merc 240D<br>column: gear<br>value:  0.42355","row: Merc 240D<br>column: am<br>value: -0.81414","row: Merc 240D<br>column: drat<br>value:  0.17475","row: Merc 240D<br>column: mpg<br>value:  0.71502","row: Merc 240D<br>column: vs<br>value:  1.11604","row: Merc 240D<br>column: qsec<br>value:  1.20387"],["row: Merc 280C<br>column: wt<br>value:  0.22765","row: Merc 280C<br>column: disp<br>value: -0.50930","row: Merc 280C<br>column: cyl<br>value: -0.10499","row: Merc 280C<br>column: hp<br>value: -0.34549","row: Merc 280C<br>column: carb<br>value:  0.73520","row: Merc 280C<br>column: gear<br>value:  0.42355","row: Merc 280C<br>column: am<br>value: -0.81414","row: Merc 280C<br>column: drat<br>value:  0.60492","row: Merc 280C<br>column: mpg<br>value: -0.38006","row: Merc 280C<br>column: vs<br>value:  1.11604","row: Merc 280C<br>column: qsec<br>value:  0.58830"],["row: Merc 280<br>column: wt<br>value:  0.22765","row: Merc 280<br>column: disp<br>value: -0.50930","row: Merc 280<br>column: cyl<br>value: -0.10499","row: Merc 280<br>column: hp<br>value: -0.34549","row: Merc 280<br>column: carb<br>value:  0.73520","row: Merc 280<br>column: gear<br>value:  0.42355","row: Merc 280<br>column: am<br>value: -0.81414","row: Merc 280<br>column: drat<br>value:  0.60492","row: Merc 280<br>column: mpg<br>value: -0.14777","row: Merc 280<br>column: vs<br>value:  1.11604","row: Merc 280<br>column: qsec<br>value:  0.25253"],["row: Volvo 142E<br>column: wt<br>value: -0.44688","row: Volvo 142E<br>column: disp<br>value: -0.88529","row: Volvo 142E<br>column: cyl<br>value: -1.22486","row: Volvo 142E<br>column: hp<br>value: -0.54968","row: Volvo 142E<br>column: carb<br>value: -0.50303","row: Volvo 142E<br>column: gear<br>value:  0.42355","row: Volvo 142E<br>column: am<br>value:  1.18990","row: Volvo 142E<br>column: drat<br>value:  0.96027","row: Volvo 142E<br>column: mpg<br>value:  0.21725","row: Volvo 142E<br>column: vs<br>value:  1.11604","row: Volvo 142E<br>column: qsec<br>value:  0.42041"],["row: Datsun 710<br>column: wt<br>value: -0.91700","row: Datsun 710<br>column: disp<br>value: -0.99018","row: Datsun 710<br>column: cyl<br>value: -1.22486","row: Datsun 710<br>column: hp<br>value: -0.78304","row: Datsun 710<br>column: carb<br>value: -1.12215","row: Datsun 710<br>column: gear<br>value:  0.42355","row: Datsun 710<br>column: am<br>value:  1.18990","row: Datsun 710<br>column: drat<br>value:  0.47400","row: Datsun 710<br>column: mpg<br>value:  0.44954","row: Datsun 710<br>column: vs<br>value:  1.11604","row: Datsun 710<br>column: qsec<br>value:  0.42601"],["row: Fiat X1-9<br>column: wt<br>value: -1.31048","row: Fiat X1-9<br>column: disp<br>value: -1.22417","row: Fiat X1-9<br>column: cyl<br>value: -1.22486","row: Fiat X1-9<br>column: hp<br>value: -1.17684","row: Fiat X1-9<br>column: carb<br>value: -1.12215","row: Fiat X1-9<br>column: gear<br>value:  0.42355","row: Fiat X1-9<br>column: am<br>value:  1.18990","row: Fiat X1-9<br>column: drat<br>value:  0.90416","row: Fiat X1-9<br>column: mpg<br>value:  1.19619","row: Fiat X1-9<br>column: vs<br>value:  1.11604","row: Fiat X1-9<br>column: qsec<br>value:  0.58830"],["row: Fiat 128<br>column: wt<br>value: -1.03965","row: Fiat 128<br>column: disp<br>value: -1.22659","row: Fiat 128<br>column: cyl<br>value: -1.22486","row: Fiat 128<br>column: hp<br>value: -1.17684","row: Fiat 128<br>column: carb<br>value: -1.12215","row: Fiat 128<br>column: gear<br>value:  0.42355","row: Fiat 128<br>column: am<br>value:  1.18990","row: Fiat 128<br>column: drat<br>value:  0.90416","row: Fiat 128<br>column: mpg<br>value:  2.04239","row: Fiat 128<br>column: vs<br>value:  1.11604","row: Fiat 128<br>column: qsec<br>value:  0.90728"],["row: Toyota Corolla<br>column: wt<br>value: -1.41268","row: Toyota Corolla<br>column: disp<br>value: -1.28791","row: Toyota Corolla<br>column: cyl<br>value: -1.22486","row: Toyota Corolla<br>column: hp<br>value: -1.19142","row: Toyota Corolla<br>column: carb<br>value: -1.12215","row: Toyota Corolla<br>column: gear<br>value:  0.42355","row: Toyota Corolla<br>column: am<br>value:  1.18990","row: Toyota Corolla<br>column: drat<br>value:  1.16600","row: Toyota Corolla<br>column: mpg<br>value:  2.29127","row: Toyota Corolla<br>column: vs<br>value:  1.11604","row: Toyota Corolla<br>column: qsec<br>value:  1.14791"],["row: Honda Civic<br>column: wt<br>value: -1.63753","row: Honda Civic<br>column: disp<br>value: -1.25079","row: Honda Civic<br>column: cyl<br>value: -1.22486","row: Honda Civic<br>column: hp<br>value: -1.38103","row: Honda Civic<br>column: carb<br>value: -0.50303","row: Honda Civic<br>column: gear<br>value:  0.42355","row: Honda Civic<br>column: am<br>value:  1.18990","row: Honda Civic<br>column: drat<br>value:  2.49390","row: Honda Civic<br>column: mpg<br>value:  1.71055","row: Honda Civic<br>column: vs<br>value:  1.11604","row: Honda Civic<br>column: qsec<br>value:  0.37564"],["row: Lotus Europa<br>column: wt<br>value: -1.74177","row: Lotus Europa<br>column: disp<br>value: -1.09427","row: Lotus Europa<br>column: cyl<br>value: -1.22486","row: Lotus Europa<br>column: hp<br>value: -0.49134","row: Lotus Europa<br>column: carb<br>value: -0.50303","row: Lotus Europa<br>column: gear<br>value:  1.77893","row: Lotus Europa<br>column: am<br>value:  1.18990","row: Lotus Europa<br>column: drat<br>value:  0.32438","row: Lotus Europa<br>column: mpg<br>value:  1.71055","row: Lotus Europa<br>column: vs<br>value:  1.11604","row: Lotus Europa<br>column: qsec<br>value: -0.53093"],["row: Porsche 914-2<br>column: wt<br>value: -1.10097","row: Porsche 914-2<br>column: disp<br>value: -0.89094","row: Porsche 914-2<br>column: cyl<br>value: -1.22486","row: Porsche 914-2<br>column: hp<br>value: -0.81221","row: Porsche 914-2<br>column: carb<br>value: -0.50303","row: Porsche 914-2<br>column: gear<br>value:  1.77893","row: Porsche 914-2<br>column: am<br>value:  1.18990","row: Porsche 914-2<br>column: drat<br>value:  1.55876","row: Porsche 914-2<br>column: mpg<br>value:  0.98049","row: Porsche 914-2<br>column: vs<br>value: -0.86803","row: Porsche 914-2<br>column: qsec<br>value: -0.64286"],["row: Mazda RX4 Wag<br>column: wt<br>value: -0.34979","row: Mazda RX4 Wag<br>column: disp<br>value: -0.57062","row: Mazda RX4 Wag<br>column: cyl<br>value: -0.10499","row: Mazda RX4 Wag<br>column: hp<br>value: -0.53509","row: Mazda RX4 Wag<br>column: carb<br>value:  0.73520","row: Mazda RX4 Wag<br>column: gear<br>value:  0.42355","row: Mazda RX4 Wag<br>column: am<br>value:  1.18990","row: Mazda RX4 Wag<br>column: drat<br>value:  0.56751","row: Mazda RX4 Wag<br>column: mpg<br>value:  0.15088","row: Mazda RX4 Wag<br>column: vs<br>value: -0.86803","row: Mazda RX4 Wag<br>column: qsec<br>value: -0.46378"],["row: Mazda RX4<br>column: wt<br>value: -0.61040","row: Mazda RX4<br>column: disp<br>value: -0.57062","row: Mazda RX4<br>column: cyl<br>value: -0.10499","row: Mazda RX4<br>column: hp<br>value: -0.53509","row: Mazda RX4<br>column: carb<br>value:  0.73520","row: Mazda RX4<br>column: gear<br>value:  0.42355","row: Mazda RX4<br>column: am<br>value:  1.18990","row: Mazda RX4<br>column: drat<br>value:  0.56751","row: Mazda RX4<br>column: mpg<br>value:  0.15088","row: Mazda RX4<br>column: vs<br>value: -0.86803","row: Mazda RX4<br>column: qsec<br>value: -0.77717"],["row: Ferrari Dino<br>column: wt<br>value: -0.45710","row: Ferrari Dino<br>column: disp<br>value: -0.69165","row: Ferrari Dino<br>column: cyl<br>value: -0.10499","row: Ferrari Dino<br>column: hp<br>value:  0.41294","row: Ferrari Dino<br>column: carb<br>value:  1.97344","row: Ferrari Dino<br>column: gear<br>value:  1.77893","row: Ferrari Dino<br>column: am<br>value:  1.18990","row: Ferrari Dino<br>column: drat<br>value:  0.04383","row: Ferrari Dino<br>column: mpg<br>value: -0.06481","row: Ferrari Dino<br>column: vs<br>value: -0.86803","row: Ferrari Dino<br>column: qsec<br>value: -1.31440"],["row: Maserati Bora<br>column: wt<br>value:  0.36052","row: Maserati Bora<br>column: disp<br>value:  0.56704","row: Maserati Bora<br>column: cyl<br>value:  1.01488","row: Maserati Bora<br>column: hp<br>value:  2.74657","row: Maserati Bora<br>column: carb<br>value:  3.21168","row: Maserati Bora<br>column: gear<br>value:  1.77893","row: Maserati Bora<br>column: am<br>value:  1.18990","row: Maserati Bora<br>column: drat<br>value: -0.10579","row: Maserati Bora<br>column: mpg<br>value: -0.84464","row: Maserati Bora<br>column: vs<br>value: -0.86803","row: Maserati Bora<br>column: qsec<br>value: -1.81805"],["row: Ford Pantera L<br>column: wt<br>value: -0.04829","row: Ford Pantera L<br>column: disp<br>value:  0.97046","row: Ford Pantera L<br>column: cyl<br>value:  1.01488","row: Ford Pantera L<br>column: hp<br>value:  1.71102","row: Ford Pantera L<br>column: carb<br>value:  0.73520","row: Ford Pantera L<br>column: gear<br>value:  1.77893","row: Ford Pantera L<br>column: am<br>value:  1.18990","row: Ford Pantera L<br>column: drat<br>value:  1.16600","row: Ford Pantera L<br>column: mpg<br>value: -0.71191","row: Ford Pantera L<br>column: vs<br>value: -0.86803","row: Ford Pantera L<br>column: qsec<br>value: -1.87401"],["row: Camaro Z28<br>column: wt<br>value:  0.63646","row: Camaro Z28<br>column: disp<br>value:  0.96240","row: Camaro Z28<br>column: cyl<br>value:  1.01488","row: Camaro Z28<br>column: hp<br>value:  1.43390","row: Camaro Z28<br>column: carb<br>value:  0.73520","row: Camaro Z28<br>column: gear<br>value: -0.93182","row: Camaro Z28<br>column: am<br>value: -0.81414","row: Camaro Z28<br>column: drat<br>value:  0.24957","row: Camaro Z28<br>column: mpg<br>value: -1.12671","row: Camaro Z28<br>column: vs<br>value: -0.86803","row: Camaro Z28<br>column: qsec<br>value: -1.36476"],["row: Duster 360<br>column: wt<br>value:  0.36052","row: Duster 360<br>column: disp<br>value:  1.04308","row: Duster 360<br>column: cyl<br>value:  1.01488","row: Duster 360<br>column: hp<br>value:  1.43390","row: Duster 360<br>column: carb<br>value:  0.73520","row: Duster 360<br>column: gear<br>value: -0.93182","row: Duster 360<br>column: am<br>value: -0.81414","row: Duster 360<br>column: drat<br>value: -0.72298","row: Duster 360<br>column: mpg<br>value: -0.96079","row: Duster 360<br>column: vs<br>value: -0.86803","row: Duster 360<br>column: qsec<br>value: -1.12413"],["row: Merc 450SE<br>column: wt<br>value:  0.87152","row: Merc 450SE<br>column: disp<br>value:  0.36371","row: Merc 450SE<br>column: cyl<br>value:  1.01488","row: Merc 450SE<br>column: hp<br>value:  0.48587","row: Merc 450SE<br>column: carb<br>value:  0.11608","row: Merc 450SE<br>column: gear<br>value: -0.93182","row: Merc 450SE<br>column: am<br>value: -0.81414","row: Merc 450SE<br>column: drat<br>value: -0.98482","row: Merc 450SE<br>column: mpg<br>value: -0.61235","row: Merc 450SE<br>column: vs<br>value: -0.86803","row: Merc 450SE<br>column: qsec<br>value: -0.25113"],["row: Merc 450SL<br>column: wt<br>value:  0.52404","row: Merc 450SL<br>column: disp<br>value:  0.36371","row: Merc 450SL<br>column: cyl<br>value:  1.01488","row: Merc 450SL<br>column: hp<br>value:  0.48587","row: Merc 450SL<br>column: carb<br>value:  0.11608","row: Merc 450SL<br>column: gear<br>value: -0.93182","row: Merc 450SL<br>column: am<br>value: -0.81414","row: Merc 450SL<br>column: drat<br>value: -0.98482","row: Merc 450SL<br>column: mpg<br>value: -0.46302","row: Merc 450SL<br>column: vs<br>value: -0.86803","row: Merc 450SL<br>column: qsec<br>value: -0.13920"],["row: Merc 450SLC<br>column: wt<br>value:  0.57514","row: Merc 450SLC<br>column: disp<br>value:  0.36371","row: Merc 450SLC<br>column: cyl<br>value:  1.01488","row: Merc 450SLC<br>column: hp<br>value:  0.48587","row: Merc 450SLC<br>column: carb<br>value:  0.11608","row: Merc 450SLC<br>column: gear<br>value: -0.93182","row: Merc 450SLC<br>column: am<br>value: -0.81414","row: Merc 450SLC<br>column: drat<br>value: -0.98482","row: Merc 450SLC<br>column: mpg<br>value: -0.81146","row: Merc 450SLC<br>column: vs<br>value: -0.86803","row: Merc 450SLC<br>column: qsec<br>value:  0.08464"],["row: AMC Javelin<br>column: wt<br>value:  0.22254","row: AMC Javelin<br>column: disp<br>value:  0.59124","row: AMC Javelin<br>column: cyl<br>value:  1.01488","row: AMC Javelin<br>column: hp<br>value:  0.04831","row: AMC Javelin<br>column: carb<br>value: -0.50303","row: AMC Javelin<br>column: gear<br>value: -0.93182","row: AMC Javelin<br>column: am<br>value: -0.81414","row: AMC Javelin<br>column: drat<br>value: -0.83520","row: AMC Javelin<br>column: mpg<br>value: -0.81146","row: AMC Javelin<br>column: vs<br>value: -0.86803","row: AMC Javelin<br>column: qsec<br>value: -0.30709"],["row: Dodge Challenger<br>column: wt<br>value:  0.30942","row: Dodge Challenger<br>column: disp<br>value:  0.70420","row: Dodge Challenger<br>column: cyl<br>value:  1.01488","row: Dodge Challenger<br>column: hp<br>value:  0.04831","row: Dodge Challenger<br>column: carb<br>value: -0.50303","row: Dodge Challenger<br>column: gear<br>value: -0.93182","row: Dodge Challenger<br>column: am<br>value: -0.81414","row: Dodge Challenger<br>column: drat<br>value: -1.56461","row: Dodge Challenger<br>column: mpg<br>value: -0.76168","row: Dodge Challenger<br>column: vs<br>value: -0.86803","row: Dodge Challenger<br>column: qsec<br>value: -0.54772"],["row: Hornet Sportabout<br>column: wt<br>value:  0.22765","row: Hornet Sportabout<br>column: disp<br>value:  1.04308","row: Hornet Sportabout<br>column: cyl<br>value:  1.01488","row: Hornet Sportabout<br>column: hp<br>value:  0.41294","row: Hornet Sportabout<br>column: carb<br>value: -0.50303","row: Hornet Sportabout<br>column: gear<br>value: -0.93182","row: Hornet Sportabout<br>column: am<br>value: -0.81414","row: Hornet Sportabout<br>column: drat<br>value: -0.83520","row: Hornet Sportabout<br>column: mpg<br>value: -0.23073","row: Hornet Sportabout<br>column: vs<br>value: -0.86803","row: Hornet Sportabout<br>column: qsec<br>value: -0.46378"],["row: Pontiac Firebird<br>column: wt<br>value:  0.64157","row: Pontiac Firebird<br>column: disp<br>value:  1.36582","row: Pontiac Firebird<br>column: cyl<br>value:  1.01488","row: Pontiac Firebird<br>column: hp<br>value:  0.41294","row: Pontiac Firebird<br>column: carb<br>value: -0.50303","row: Pontiac Firebird<br>column: gear<br>value: -0.93182","row: Pontiac Firebird<br>column: am<br>value: -0.81414","row: Pontiac Firebird<br>column: drat<br>value: -0.96612","row: Pontiac Firebird<br>column: mpg<br>value: -0.14777","row: Pontiac Firebird<br>column: vs<br>value: -0.86803","row: Pontiac Firebird<br>column: qsec<br>value: -0.44699"],["row: Chrysler Imperial<br>column: wt<br>value:  2.17460","row: Chrysler Imperial<br>column: disp<br>value:  1.68856","row: Chrysler Imperial<br>column: cyl<br>value:  1.01488","row: Chrysler Imperial<br>column: hp<br>value:  1.21513","row: Chrysler Imperial<br>column: carb<br>value:  0.73520","row: Chrysler Imperial<br>column: gear<br>value: -0.93182","row: Chrysler Imperial<br>column: am<br>value: -0.81414","row: Chrysler Imperial<br>column: drat<br>value: -0.68558","row: Chrysler Imperial<br>column: mpg<br>value: -0.89442","row: Chrysler Imperial<br>column: vs<br>value: -0.86803","row: Chrysler Imperial<br>column: qsec<br>value: -0.23993"],["row: Lincoln Continental<br>column: wt<br>value:  2.25534","row: Lincoln Continental<br>column: disp<br>value:  1.84993","row: Lincoln Continental<br>column: cyl<br>value:  1.01488","row: Lincoln Continental<br>column: hp<br>value:  0.99635","row: Lincoln Continental<br>column: carb<br>value:  0.73520","row: Lincoln Continental<br>column: gear<br>value: -0.93182","row: Lincoln Continental<br>column: am<br>value: -0.81414","row: Lincoln Continental<br>column: drat<br>value: -1.11574","row: Lincoln Continental<br>column: mpg<br>value: -1.60788","row: Lincoln Continental<br>column: vs<br>value: -0.86803","row: Lincoln Continental<br>column: qsec<br>value: -0.01609"],["row: Cadillac Fleetwood<br>column: wt<br>value:  2.07750","row: Cadillac Fleetwood<br>column: disp<br>value:  1.94675","row: Cadillac Fleetwood<br>column: cyl<br>value:  1.01488","row: Cadillac Fleetwood<br>column: hp<br>value:  0.85050","row: Cadillac Fleetwood<br>column: carb<br>value:  0.73520","row: Cadillac Fleetwood<br>column: gear<br>value: -0.93182","row: Cadillac Fleetwood<br>column: am<br>value: -0.81414","row: Cadillac Fleetwood<br>column: drat<br>value: -1.24666","row: Cadillac Fleetwood<br>column: mpg<br>value: -1.60788","row: Cadillac Fleetwood<br>column: vs<br>value: -0.86803","row: Cadillac Fleetwood<br>column: qsec<br>value:  0.07345"]],"colorscale":[[0,"#4575B4"],[0.01100372235231325,"#4979B6"],[0.026002004904456807,"#5080BA"],[0.0464998690861207,"#5A89BE"],[0.052328755688921806,"#5D8CC0"],[0.060837902231231887,"#608FC2"],[0.090710948693631041,"#6E9DC9"],[0.096934498219615001,"#719FCA"],[0.10013387340605086,"#73A1CB"],[0.11003722352313278,"#77A5CE"],[0.11080689396977211,"#77A6CE"],[0.11524507124909382,"#79A8CF"],[0.12254302820336707,"#7DABD0"],[0.1233560912572952,"#7DABD0"],[0.12561332637047715,"#7EACD1"],[0.12730256534745832,"#7EADD1"],[0.1276430360838266,"#7FADD1"],[0.12777851906186749,"#7FADD1"],[0.13421697481573577,"#81B0D3"],[0.13708485763082198,"#83B1D4"],[0.14694178117428419,"#88B6D6"],[0.14744987952099789,"#88B6D6"],[0.14783808499501405,"#88B6D6"],[0.14909887497390939,"#89B7D7"],[0.15200358178586126,"#8AB8D7"],[0.15332136840182384,"#8BB9D7"],[0.16406114895154589,"#8FBDD9"],[0.17378737812141623,"#94C1DB"],[0.17484165869052359,"#95C1DC"],[0.17851919922146858,"#96C2DC"],[0.17956696237613329,"#97C2DD"],[0.18526328760825064,"#99C4DE"],[0.18817628328291511,"#9BC5DE"],[0.1926170348568729,"#9CC6DF"],[0.1929841779359176,"#9DC6DF"],[0.19330148041219036,"#9DC7DF"],[0.19441203907914498,"#9DC7DF"],[0.19780661405768518,"#9FC8E0"],[0.20240458921742766,"#A1CAE1"],[0.20426198293808273,"#A2CBE1"],[0.20840197765358048,"#A4CCE2"],[0.20878192800797726,"#A4CCE2"],[0.20892962545779747,"#A4CCE2"],[0.21451769363814971,"#A7CEE2"],[0.21567295810534029,"#A8CEE3"],[0.21731540393331963,"#A9CFE3"],[0.2187171798183522,"#A9CFE3"],[0.22025345926832218,"#AACFE4"],[0.22582498423014727,"#ADD1E5"],[0.22598922489849455,"#ADD1E5"],[0.22632722612375217,"#ADD1E5"],[0.22850473417890696,"#AED2E5"],[0.23248833623187498,"#B0D3E6"],[0.23368230718564195,"#B1D3E6"],[0.23518540728019335,"#B1D4E7"],[0.24208189175089204,"#B4D6E8"],[0.24807984290001639,"#B7D8E9"],[0.24846411911133834,"#B7D8E9"],[0.24893228741918427,"#B7D8E9"],[0.25628602195233124,"#BBDAEA"],[0.26040381867952911,"#BDDBEB"],[0.26078821974982475,"#BDDBEB"],[0.26327170149461532,"#BEDCEB"],[0.26408933645551846,"#BFDDEB"],[0.26834351605069573,"#C1DEEC"],[0.26957550142429776,"#C1DFEC"],[0.27187534993987394,"#C3E0ED"],[0.27729380327829456,"#C5E1EE"],[0.27744250598168063,"#C5E1EE"],[0.27860803702554993,"#C6E2EE"],[0.28059491998398867,"#C7E2EF"],[0.28061763155316394,"#C7E2EF"],[0.29375509658260518,"#CCE6F0"],[0.29970877956549796,"#CFE8F1"],[0.30055417809073609,"#D0E8F2"],[0.30354265094315996,"#D1E9F2"],[0.30810422586477182,"#D4EBF3"],[0.31910794821708488,"#D9EEF5"],[0.32130869268754786,"#DAEEF6"],[0.32311775966426937,"#DBEFF6"],[0.33943035026519391,"#E1F3F5"],[0.34111539292171172,"#E1F3F5"],[0.34768606364493371,"#E2F3F3"],[0.34784337088543954,"#E2F3F3"],[0.35497262907488591,"#E3F4F0"],[0.35574294086611846,"#E3F4F0"],[0.3589918181301141,"#E4F5EF"],[0.35940932674097503,"#E4F5EF"],[0.36301100718534229,"#E5F5ED"],[0.36532358209680083,"#E5F5EC"],[0.36803499350437757,"#E6F5EC"],[0.37710638789249284,"#E8F5E9"],[0.37798701409806379,"#E8F5E8"],[0.3829295378605021,"#E9F6E6"],[0.38513028233096469,"#E9F6E6"],[0.39131291785358141,"#EAF7E4"],[0.39815567642852234,"#ECF7E1"],[0.4028491716091071,"#EDF8DF"],[0.40652671214005204,"#EDF8DE"],[0.41120574890926193,"#EEF8DD"],[0.41176423532597872,"#EFF8DD"],[0.41224607311188793,"#EFF8DD"],[0.41325087037569497,"#EFF8DC"],[0.41446826702944689,"#EFF8DC"],[0.41727005943092316,"#EFF8DB"],[0.41755933373288662,"#EFF8DB"],[0.4181414493879046,"#EFF8DA"],[0.42932762659660784,"#F1FAD6"],[0.43226949585666619,"#F2FAD6"],[0.43937559923467828,"#F3FAD4"],[0.44000415571425355,"#F3FBD3"],[0.44234963856299364,"#F4FBD3"],[0.44968408447521913,"#F5FBD0"],[0.4511526164448445,"#F5FBCF"],[0.45177072712074529,"#F5FBCF"],[0.45225298868007563,"#F6FBCF"],[0.45688100259185072,"#F6FBCD"],[0.46168982010422543,"#F7FCCC"],[0.46402349855065017,"#F8FCCB"],[0.47152911167650402,"#F9FDC8"],[0.47998426772462005,"#FBFDC5"],[0.48007752275894977,"#FBFDC5"],[0.48157708431457452,"#FBFDC5"],[0.48416378350178402,"#FCFDC4"],[0.48474380486871127,"#FCFDC4"],[0.48743260382083958,"#FDFDC3"],[0.4936346514802592,"#FEFEC1"],[0.49463944874406629,"#FEFEC0"],[0.50695497820780377,"#FEFEBC"],[0.50908129251480927,"#FEFDBC"],[0.51305033428286517,"#FEFCBB"],[0.53572056892780551,"#FEF8B5"],[0.53985532561538374,"#FEF7B4"],[0.54358388420427606,"#FEF6B3"],[0.54627325231595791,"#FEF6B2"],[0.54688500090996972,"#FEF6B2"],[0.55730587390879271,"#FEF4AE"],[0.55772337441144382,"#FEF4AE"],[0.55930988679280758,"#FEF3AE"],[0.56128158243776793,"#FEF3AD"],[0.5643993970786676,"#FEF2AC"],[0.56804370568705242,"#FEF2AB"],[0.57358849822508129,"#FEF0AA"],[0.5879335585500407,"#FEEFA5"],[0.59420100702491674,"#FEEDA4"],[0.59775881974918632,"#FEEDA3"],[0.60245779210160577,"#FEECA2"],[0.6036943180001717,"#FEEBA1"],[0.60520472937723024,"#FEEBA1"],[0.60630510161246176,"#FEEBA1"],[0.60741763930496073,"#FEEBA1"],[0.62941291855231929,"#FEE69A"],[0.63704899347963129,"#FEE598"],[0.65043588153125398,"#FEE294"],[0.67498717089902915,"#FDDB8D"],[0.7005094887341814,"#FDCE84"],[0.70483237972590385,"#FDCC83"],[0.70492565501789206,"#FDCC83"],[0.71827816663324007,"#FDC57F"],[0.73223973636145634,"#FDBF7A"],[0.75127788493782133,"#FDB573"],[0.75652516714143259,"#FCB371"],[0.77008274212960204,"#FCAC6D"],[0.77698747987384809,"#FCA86B"],[0.79607862788618211,"#FC9F65"],[0.81195442465433365,"#FC975F"],[0.81902051393237574,"#FC945D"],[0.85886419744627385,"#F67E51"],[0.90854533488901312,"#EB6242"],[0.92431267759431512,"#E75A3D"],[1,"#D73027"]],"type":"heatmap","showscale":false,"autocolorscale":false,"showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1],"y":[1],"name":"aae30917534f94217ccf3bba45e161fb","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#4575B4"],[0.0033444816053511718,"#4676B5"],[0.0066889632107023436,"#4878B5"],[0.010033444816053515,"#4979B6"],[0.013377926421404687,"#4B7AB7"],[0.016722408026755859,"#4C7CB7"],[0.020066889632107031,"#4E7DB8"],[0.023411371237458203,"#4F7FB9"],[0.026755852842809374,"#5180BA"],[0.030100334448160546,"#5282BB"],[0.033444816053511718,"#5483BC"],[0.036789297658862886,"#5585BC"],[0.040133779264214062,"#5786BD"],[0.04347826086956523,"#5988BE"],[0.046822742474916405,"#5A89BE"],[0.050167224080267574,"#5C8BBF"],[0.053511705685618749,"#5D8CC0"],[0.056856187290969917,"#5F8EC1"],[0.060200668896321093,"#608FC2"],[0.063545150501672268,"#6190C3"],[0.066889632107023436,"#6392C3"],[0.070234113712374563,"#6594C4"],[0.073578595317725731,"#6695C5"],[0.0769230769230769,"#6796C5"],[0.080267558528428082,"#6998C6"],[0.08361204013377925,"#6A99C7"],[0.086956521739130418,"#6C9BC8"],[0.090301003344481587,"#6E9DC9"],[0.093645484949832769,"#6F9ECA"],[0.096989966555183937,"#719FCA"],[0.10033444816053511,"#73A1CB"],[0.10367892976588627,"#74A2CC"],[0.10702341137123746,"#75A4CD"],[0.11036789297658862,"#77A6CE"],[0.11371237458193979,"#78A7CF"],[0.11705685618729096,"#7AA8CF"],[0.12040133779264214,"#7CAAD0"],[0.12374581939799331,"#7DABD1"],[0.12709030100334448,"#7EADD1"],[0.13043478260869565,"#80AFD2"],[0.13377926421404682,"#81B0D3"],[0.13712374581939796,"#83B1D4"],[0.14046822742474913,"#85B3D5"],[0.14381270903010029,"#86B4D5"],[0.14715719063545146,"#88B6D6"],[0.15050167224080263,"#8AB7D7"],[0.1538461538461538,"#8BB9D7"],[0.157190635451505,"#8CBAD8"],[0.16053511705685616,"#8EBCD9"],[0.16387959866220733,"#8FBDD9"],[0.1672240802675585,"#91BEDA"],[0.17056856187290967,"#92C0DB"],[0.17391304347826086,"#94C1DB"],[0.17725752508361203,"#96C2DC"],[0.1806020066889632,"#97C3DD"],[0.18394648829431437,"#99C4DD"],[0.18729096989966554,"#9AC5DE"],[0.19063545150501671,"#9BC6DF"],[0.19397993311036787,"#9DC7DF"],[0.19732441471571904,"#9FC8E0"],[0.20066889632107021,"#A0C9E1"],[0.20401337792642138,"#A2CBE1"],[0.20735785953177255,"#A4CCE2"],[0.21070234113712374,"#A5CDE2"],[0.21404682274247491,"#A7CEE2"],[0.21739130434782608,"#A9CFE3"],[0.22073578595317725,"#AAD0E4"],[0.22408026755852842,"#ACD1E4"],[0.22742474916387959,"#AED2E5"],[0.23076923076923075,"#AFD3E6"],[0.23411371237458192,"#B1D4E6"],[0.23745819397993312,"#B2D5E7"],[0.24080267558528429,"#B3D6E8"],[0.24414715719063546,"#B5D7E8"],[0.24749163879598662,"#B7D8E9"],[0.25083612040133779,"#B8D8E9"],[0.25418060200668896,"#BAD9E9"],[0.25752508361204013,"#BBDAEA"],[0.2608695652173913,"#BDDBEB"],[0.26421404682274247,"#BFDDEB"],[0.26755852842809363,"#C0DEEC"],[0.2709030100334448,"#C2DFED"],[0.27424749163879597,"#C4E0ED"],[0.27759197324414714,"#C5E1EE"],[0.28093645484949831,"#C7E2EF"],[0.28428093645484948,"#C9E3EF"],[0.28762541806020064,"#CAE4EF"],[0.29096989966555181,"#CBE5F0"],[0.29431438127090298,"#CDE6F0"],[0.29765886287625415,"#CEE7F1"],[0.30100334448160532,"#D0E8F2"],[0.30434782608695649,"#D2E9F2"],[0.30769230769230765,"#D3EAF3"],[0.31103678929765882,"#D5EBF4"],[0.31438127090300999,"#D7ECF4"],[0.31772575250836116,"#D8EDF5"],[0.32107023411371238,"#DAEEF6"],[0.32441471571906355,"#DCEFF6"],[0.32775919732441472,"#DDF1F6"],[0.33110367892976589,"#DFF2F7"],[0.33444816053511706,"#E0F3F7"],[0.33779264214046822,"#E0F3F6"],[0.34113712374581939,"#E1F3F5"],[0.34448160535117056,"#E1F3F4"],[0.34782608695652173,"#E2F3F3"],[0.3511705685618729,"#E3F4F2"],[0.35451505016722407,"#E3F4F1"],[0.35785953177257523,"#E4F4EF"],[0.3612040133779264,"#E5F5EE"],[0.36454849498327757,"#E5F5ED"],[0.36789297658862874,"#E6F5EC"],[0.37123745819397991,"#E7F5EB"],[0.37458193979933108,"#E7F5EA"],[0.37792642140468224,"#E8F5E8"],[0.38127090301003341,"#E8F6E7"],[0.38461538461538458,"#E9F6E6"],[0.38795986622073575,"#EAF6E5"],[0.39130434782608692,"#EAF7E4"],[0.39464882943143809,"#EBF7E3"],[0.39799331103678925,"#ECF7E1"],[0.40133779264214042,"#ECF8E0"],[0.40468227424749159,"#EDF8DF"],[0.40802675585284276,"#EEF8DE"],[0.41137123745819393,"#EEF8DD"],[0.4147157190635451,"#EFF8DC"],[0.41806020066889632,"#EFF8DA"],[0.42140468227424749,"#F0F9D9"],[0.42474916387959866,"#F0F9D8"],[0.42809364548494983,"#F1F9D7"],[0.43143812709030099,"#F1FAD6"],[0.43478260869565216,"#F2FAD5"],[0.43812709030100333,"#F3FAD4"],[0.4414715719063545,"#F3FBD3"],[0.44481605351170567,"#F4FBD2"],[0.44816053511705684,"#F5FBD1"],[0.451505016722408,"#F5FBCF"],[0.45484949832775917,"#F6FBCE"],[0.45819397993311034,"#F7FBCD"],[0.46153846153846151,"#F7FCCC"],[0.46488294314381268,"#F8FCCB"],[0.46822742474916385,"#F9FCCA"],[0.47157190635451501,"#F9FDC8"],[0.47491638795986624,"#FAFDC7"],[0.47826086956521741,"#FBFDC6"],[0.48160535117056857,"#FBFDC5"],[0.48494983277591974,"#FCFDC4"],[0.48829431438127091,"#FDFDC3"],[0.49163879598662208,"#FDFEC1"],[0.49498327759197325,"#FEFEC0"],[0.49832775919732442,"#FEFEBF"],[0.50167224080267558,"#FEFEBE"],[0.50501672240802675,"#FEFEBD"],[0.50836120401337792,"#FEFDBC"],[0.51170568561872909,"#FEFDBB"],[0.51505016722408026,"#FEFCBA"],[0.51839464882943143,"#FEFBB9"],[0.52173913043478259,"#FEFBB8"],[0.52508361204013376,"#FEFAB7"],[0.52842809364548493,"#FEF9B6"],[0.5317725752508361,"#FEF9B6"],[0.53511705685618727,"#FEF8B5"],[0.53846153846153844,"#FEF7B4"],[0.5418060200668896,"#FEF7B3"],[0.54515050167224077,"#FEF6B2"],[0.54849498327759194,"#FEF5B1"],[0.55183946488294311,"#FEF5B0"],[0.55518394648829428,"#FEF4AF"],[0.55852842809364545,"#FEF3AE"],[0.56187290969899661,"#FEF3AD"],[0.56521739130434778,"#FEF2AC"],[0.56856187290969895,"#FEF1AB"],[0.57190635451505012,"#FEF1AA"],[0.57525083612040129,"#FEF0A9"],[0.57859531772575246,"#FEF0A8"],[0.58193979933110362,"#FEEFA7"],[0.58528428093645479,"#FEEFA6"],[0.58862876254180596,"#FEEEA5"],[0.59197324414715713,"#FEEEA4"],[0.5953177257525083,"#FEEDA3"],[0.59866220735785947,"#FEECA2"],[0.60200668896321063,"#FEECA2"],[0.6053511705685618,"#FEEBA1"],[0.60869565217391297,"#FEEAA0"],[0.61204013377926414,"#FEEA9F"],[0.61538461538461531,"#FEE99E"],[0.61872909698996648,"#FEE89D"],[0.62207357859531764,"#FEE89C"],[0.62541806020066881,"#FEE79B"],[0.62876254180601998,"#FEE79A"],[0.63210702341137115,"#FEE699"],[0.63545150501672232,"#FEE598"],[0.63879598662207349,"#FEE597"],[0.64214046822742477,"#FEE496"],[0.64548494983277593,"#FEE395"],[0.6488294314381271,"#FEE394"],[0.65217391304347827,"#FEE293"],[0.65551839464882944,"#FEE192"],[0.65886287625418061,"#FEE191"],[0.66220735785953178,"#FEE090"],[0.66555183946488294,"#FEDF8F"],[0.66889632107023411,"#FEDE8E"],[0.67224080267558528,"#FDDC8D"],[0.67558528428093645,"#FDDB8C"],[0.67892976588628762,"#FDD98B"],[0.68227424749163879,"#FDD78A"],[0.68561872909698995,"#FDD689"],[0.68896321070234112,"#FDD488"],[0.69230769230769229,"#FDD287"],[0.69565217391304346,"#FDD186"],[0.69899665551839463,"#FDCF84"],[0.7023411371237458,"#FDCD83"],[0.70568561872909696,"#FDCC82"],[0.70903010033444813,"#FDCA81"],[0.7123745819397993,"#FDC880"],[0.71571906354515047,"#FDC77F"],[0.71906354515050164,"#FDC57E"],[0.72240802675585281,"#FDC37D"],[0.72575250836120397,"#FDC27C"],[0.72909698996655514,"#FDC07A"],[0.73244147157190631,"#FDBE79"],[0.73578595317725748,"#FDBD78"],[0.73913043478260865,"#FDBB77"],[0.74247491638795982,"#FDB976"],[0.74581939799331098,"#FDB875"],[0.74916387959866215,"#FDB674"],[0.75250836120401332,"#FDB573"],[0.75585284280936449,"#FCB372"],[0.75919732441471566,"#FCB171"],[0.76254180602006683,"#FCB070"],[0.76588628762541799,"#FCAE6F"],[0.76923076923076916,"#FCAC6E"],[0.77257525083612033,"#FCAB6D"],[0.7759197324414715,"#FCA96C"],[0.77926421404682267,"#FCA76A"],[0.78260869565217384,"#FCA669"],[0.785953177257525,"#FCA468"],[0.78929765886287617,"#FCA267"],[0.79264214046822734,"#FCA166"],[0.79598662207357851,"#FC9F65"],[0.79933110367892968,"#FC9D64"],[0.80267558528428085,"#FC9C63"],[0.80602006688963201,"#FC9A62"],[0.80936454849498318,"#FC9860"],[0.81270903010033435,"#FC975F"],[0.81605351170568552,"#FC955E"],[0.81939799331103669,"#FC935D"],[0.82274247491638786,"#FC925C"],[0.82608695652173902,"#FC905B"],[0.82943143812709019,"#FC8E5A"],[0.83277591973244136,"#FB8D59"],[0.83612040133779264,"#FA8B58"],[0.83946488294314381,"#FA8957"],[0.84280936454849498,"#F98756"],[0.84615384615384615,"#F88555"],[0.84949832775919731,"#F88354"],[0.85284280936454848,"#F78153"],[0.85618729096989965,"#F67F52"],[0.85953177257525082,"#F67E51"],[0.86287625418060199,"#F57C50"],[0.86622073578595316,"#F47A4F"],[0.86956521739130432,"#F4784E"],[0.87290969899665549,"#F3764D"],[0.87625418060200666,"#F2754C"],[0.87959866220735783,"#F1734B"],[0.882943143812709,"#F0714A"],[0.88628762541806017,"#F06F49"],[0.88963210702341133,"#EF6D48"],[0.8929765886287625,"#EE6B47"],[0.89632107023411367,"#EE6946"],[0.89966555183946484,"#ED6845"],[0.90301003344481601,"#EC6644"],[0.90635451505016718,"#EC6443"],[0.90969899665551834,"#EB6242"],[0.91304347826086951,"#EA6041"],[0.91638795986622068,"#E95E40"],[0.91973244147157185,"#E85D3F"],[0.92307692307692302,"#E75B3E"],[0.92642140468227419,"#E7593D"],[0.92976588628762535,"#E6573C"],[0.93311036789297652,"#E5553B"],[0.93645484949832769,"#E5533A"],[0.93979933110367886,"#E45139"],[0.94314381270903003,"#E34F38"],[0.94648829431438131,"#E34E37"],[0.94983277591973247,"#E24C36"],[0.95317725752508364,"#E14A35"],[0.95652173913043481,"#E04834"],[0.95986622073578598,"#DF4633"],[0.96321070234113715,"#DE4432"],[0.96655518394648832,"#DE4231"],[0.96989966555183948,"#DD4030"],[0.97324414715719065,"#DC3E2F"],[0.97658862876254182,"#DC3D2E"],[0.97993311036789299,"#DB3B2D"],[0.98327759197324416,"#DA392C"],[0.98662207357859533,"#DA372B"],[0.98996655518394649,"#D9352A"],[0.99331103678929766,"#D83329"],[0.99665551839464883,"#D83228"],[1,"#D73027"]],"colorbar":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"thickness":23.039999999999996,"title":null,"titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["-1","0","1","2","3"],"tickvals":[0.17295069037962038,0.36892552843218041,0.56490036648474051,0.76087520453730051,0.95685004258986051],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y2","frame":null},{"x":[8.480167064935884,8.480167064935884,null,8.480167064935884,5.9048662979799653,null,5.9048662979799653,5.9048662979799653,null,5.9048662979799653,3.4090955988276015,null,3.4090955988276015,3.4090955988276015,null,3.4090955988276015,0.99369689663990912,null,0.99369689663990912,0.99369689663990912,null,0.99369689663990912,0,null,0.99369689663990912,0.99369689663990912,null,0.99369689663990912,0,null,3.4090955988276015,3.4090955988276015,null,3.4090955988276015,3.1736663993574266,null,3.1736663993574266,3.1736663993574266,null,3.1736663993574266,2.3602221143882787,null,2.3602221143882787,2.3602221143882787,null,2.3602221143882787,0,null,2.3602221143882787,2.3602221143882787,null,2.3602221143882787,1.7677287125192691,null,1.7677287125192691,1.7677287125192691,null,1.7677287125192691,0,null,1.7677287125192691,1.7677287125192691,null,1.7677287125192691,0,null,3.1736663993574266,3.1736663993574266,null,3.1736663993574266,0.40828841499953544,null,0.40828841499953544,0.40828841499953544,null,0.40828841499953544,0,null,0.40828841499953544,0.40828841499953544,null,0.40828841499953544,0,null,5.9048662979799653,5.9048662979799653,null,5.9048662979799653,3.4109615794561163,null,3.4109615794561163,3.4109615794561163,null,3.4109615794561163,2.6458744633764866,null,2.6458744633764866,2.6458744633764866,null,2.6458744633764866,0.9799180900893989,null,0.9799180900893989,0.9799180900893989,null,0.9799180900893989,0,null,0.9799180900893989,0.9799180900893989,null,0.9799180900893989,0,null,2.6458744633764866,2.6458744633764866,null,2.6458744633764866,1.924337558456231,null,1.924337558456231,1.924337558456231,null,1.924337558456231,1.2631917121032681,null,1.2631917121032681,1.2631917121032681,null,1.2631917121032681,0,null,1.2631917121032681,1.2631917121032681,null,1.2631917121032681,0.57579170076826003,null,0.57579170076826003,0.57579170076826003,null,0.57579170076826003,0,null,0.57579170076826003,0.57579170076826003,null,0.57579170076826003,0,null,1.924337558456231,1.924337558456231,null,1.924337558456231,0,null,3.4109615794561163,3.4109615794561163,null,3.4109615794561163,2.5613775588122039,null,2.5613775588122039,2.5613775588122039,null,2.5613775588122039,0,null,2.5613775588122039,2.5613775588122039,null,2.5613775588122039,0,null,8.480167064935884,8.480167064935884,null,8.480167064935884,6.0178217069364059,null,6.0178217069364059,6.0178217069364059,null,6.0178217069364059,5.0070558517721784,null,5.0070558517721784,5.0070558517721784,null,5.0070558517721784,2.310738329479852,null,2.310738329479852,2.310738329479852,null,2.310738329479852,0.40758992593791071,null,0.40758992593791071,0.40758992593791071,null,0.40758992593791071,0,null,0.40758992593791071,0.40758992593791071,null,0.40758992593791071,0,null,2.310738329479852,2.310738329479852,null,2.310738329479852,0,null,5.0070558517721784,5.0070558517721784,null,5.0070558517721784,3.0287549476062794,null,3.0287549476062794,3.0287549476062794,null,3.0287549476062794,0,null,3.0287549476062794,3.0287549476062794,null,3.0287549476062794,0,null,6.0178217069364059,6.0178217069364059,null,6.0178217069364059,2.9910213945676096,null,2.9910213945676096,2.9910213945676096,null,2.9910213945676096,2.7782605742286681,null,2.7782605742286681,2.7782605742286681,null,2.7782605742286681,1.0554322577143322,null,1.0554322577143322,1.0554322577143322,null,1.0554322577143322,0,null,1.0554322577143322,1.0554322577143322,null,1.0554322577143322,0,null,2.7782605742286681,2.7782605742286681,null,2.7782605742286681,1.4562704041321701,null,1.4562704041321701,1.4562704041321701,null,1.4562704041321701,0.49013046057397142,null,0.49013046057397142,0.49013046057397142,null,0.49013046057397142,0.3944265817998116,null,0.3944265817998116,0.3944265817998116,null,0.3944265817998116,0,null,0.3944265817998116,0.3944265817998116,null,0.3944265817998116,0,null,0.49013046057397142,0.49013046057397142,null,0.49013046057397142,0,null,1.4562704041321701,1.4562704041321701,null,1.4562704041321701,1.1942533431760558,null,1.1942533431760558,1.1942533431760558,null,1.1942533431760558,0.7827693815204726,null,0.7827693815204726,0.7827693815204726,null,0.7827693815204726,0,null,0.7827693815204726,0.7827693815204726,null,0.7827693815204726,0,null,1.1942533431760558,1.1942533431760558,null,1.1942533431760558,0.54753328158815218,null,0.54753328158815218,0.54753328158815218,null,0.54753328158815218,0,null,0.54753328158815218,0.54753328158815218,null,0.54753328158815218,0,null,2.9910213945676096,2.9910213945676096,null,2.9910213945676096,1.0635310193141874,null,1.0635310193141874,1.0635310193141874,null,1.0635310193141874,0,null,1.0635310193141874,1.0635310193141874,null,1.0635310193141874,0.29568247075525905,null,0.29568247075525905,0.29568247075525905,null,0.29568247075525905,0,null,0.29568247075525905,0.29568247075525905,null,0.29568247075525905,0],"y":[15.3125,7.828125,null,7.828125,7.828125,null,7.828125,3.3125,null,3.3125,3.3125,null,3.3125,1.5,null,1.5,1.5,null,1.5,1,null,1,1,null,1.5,2,null,2,2,null,3.3125,5.125,null,5.125,5.125,null,5.125,3.75,null,3.75,3.75,null,3.75,3,null,3,3,null,3.75,4.5,null,4.5,4.5,null,4.5,4,null,4,4,null,4.5,5,null,5,5,null,5.125,6.5,null,6.5,6.5,null,6.5,6,null,6,6,null,6.5,7,null,7,7,null,7.828125,12.34375,null,12.34375,12.34375,null,12.34375,10.1875,null,10.1875,10.1875,null,10.1875,8.5,null,8.5,8.5,null,8.5,8,null,8,8,null,8.5,9,null,9,9,null,10.1875,11.875,null,11.875,11.875,null,11.875,10.75,null,10.75,10.75,null,10.75,10,null,10,10,null,10.75,11.5,null,11.5,11.5,null,11.5,11,null,11,11,null,11.5,12,null,12,12,null,11.875,13,null,13,13,null,12.34375,14.5,null,14.5,14.5,null,14.5,14,null,14,14,null,14.5,15,null,15,15,null,15.3125,22.796875,null,22.796875,22.796875,null,22.796875,18.375,null,18.375,18.375,null,18.375,17.25,null,17.25,17.25,null,17.25,16.5,null,16.5,16.5,null,16.5,16,null,16,16,null,16.5,17,null,17,17,null,17.25,18,null,18,18,null,18.375,19.5,null,19.5,19.5,null,19.5,19,null,19,19,null,19.5,20,null,20,20,null,22.796875,27.21875,null,27.21875,27.21875,null,27.21875,23.6875,null,23.6875,23.6875,null,23.6875,21.5,null,21.5,21.5,null,21.5,21,null,21,21,null,21.5,22,null,22,22,null,23.6875,25.875,null,25.875,25.875,null,25.875,24.25,null,24.25,24.25,null,24.25,23.5,null,23.5,23.5,null,23.5,23,null,23,23,null,23.5,24,null,24,24,null,24.25,25,null,25,25,null,25.875,27.5,null,27.5,27.5,null,27.5,26.5,null,26.5,26.5,null,26.5,26,null,26,26,null,26.5,27,null,27,27,null,27.5,28.5,null,28.5,28.5,null,28.5,28,null,28,28,null,28.5,29,null,29,29,null,27.21875,30.75,null,30.75,30.75,null,30.75,30,null,30,30,null,30.75,31.5,null,31.5,31.5,null,31.5,31,null,31,31,null,31.5,32,null,32,32],"text":["y: 8.4801671","y: 8.4801671",null,"y: 8.4801671","y: 8.4801671",null,"y: 5.9048663","y: 5.9048663",null,"y: 5.9048663","y: 5.9048663",null,"y: 3.4090956","y: 3.4090956",null,"y: 3.4090956","y: 3.4090956",null,"y: 0.9936969","y: 0.9936969",null,"y: 0.9936969","y: 0.9936969",null,"y: 0.9936969","y: 0.9936969",null,"y: 0.9936969","y: 0.9936969",null,"y: 3.4090956","y: 3.4090956",null,"y: 3.4090956","y: 3.4090956",null,"y: 3.1736664","y: 3.1736664",null,"y: 3.1736664","y: 3.1736664",null,"y: 2.3602221","y: 2.3602221",null,"y: 2.3602221","y: 2.3602221",null,"y: 2.3602221","y: 2.3602221",null,"y: 2.3602221","y: 2.3602221",null,"y: 1.7677287","y: 1.7677287",null,"y: 1.7677287","y: 1.7677287",null,"y: 1.7677287","y: 1.7677287",null,"y: 1.7677287","y: 1.7677287",null,"y: 3.1736664","y: 3.1736664",null,"y: 3.1736664","y: 3.1736664",null,"y: 0.4082884","y: 0.4082884",null,"y: 0.4082884","y: 0.4082884",null,"y: 0.4082884","y: 0.4082884",null,"y: 0.4082884","y: 0.4082884",null,"y: 5.9048663","y: 5.9048663",null,"y: 5.9048663","y: 5.9048663",null,"y: 3.4109616","y: 3.4109616",null,"y: 3.4109616","y: 3.4109616",null,"y: 2.6458745","y: 2.6458745",null,"y: 2.6458745","y: 2.6458745",null,"y: 0.9799181","y: 0.9799181",null,"y: 0.9799181","y: 0.9799181",null,"y: 0.9799181","y: 0.9799181",null,"y: 0.9799181","y: 0.9799181",null,"y: 2.6458745","y: 2.6458745",null,"y: 2.6458745","y: 2.6458745",null,"y: 1.9243376","y: 1.9243376",null,"y: 1.9243376","y: 1.9243376",null,"y: 1.2631917","y: 1.2631917",null,"y: 1.2631917","y: 1.2631917",null,"y: 1.2631917","y: 1.2631917",null,"y: 1.2631917","y: 1.2631917",null,"y: 0.5757917","y: 0.5757917",null,"y: 0.5757917","y: 0.5757917",null,"y: 0.5757917","y: 0.5757917",null,"y: 0.5757917","y: 0.5757917",null,"y: 1.9243376","y: 1.9243376",null,"y: 1.9243376","y: 1.9243376",null,"y: 3.4109616","y: 3.4109616",null,"y: 3.4109616","y: 3.4109616",null,"y: 2.5613776","y: 2.5613776",null,"y: 2.5613776","y: 2.5613776",null,"y: 2.5613776","y: 2.5613776",null,"y: 2.5613776","y: 2.5613776",null,"y: 8.4801671","y: 8.4801671",null,"y: 8.4801671","y: 8.4801671",null,"y: 6.0178217","y: 6.0178217",null,"y: 6.0178217","y: 6.0178217",null,"y: 5.0070559","y: 5.0070559",null,"y: 5.0070559","y: 5.0070559",null,"y: 2.3107383","y: 2.3107383",null,"y: 2.3107383","y: 2.3107383",null,"y: 0.4075899","y: 0.4075899",null,"y: 0.4075899","y: 0.4075899",null,"y: 0.4075899","y: 0.4075899",null,"y: 0.4075899","y: 0.4075899",null,"y: 2.3107383","y: 2.3107383",null,"y: 2.3107383","y: 2.3107383",null,"y: 5.0070559","y: 5.0070559",null,"y: 5.0070559","y: 5.0070559",null,"y: 3.0287549","y: 3.0287549",null,"y: 3.0287549","y: 3.0287549",null,"y: 3.0287549","y: 3.0287549",null,"y: 3.0287549","y: 3.0287549",null,"y: 6.0178217","y: 6.0178217",null,"y: 6.0178217","y: 6.0178217",null,"y: 2.9910214","y: 2.9910214",null,"y: 2.9910214","y: 2.9910214",null,"y: 2.7782606","y: 2.7782606",null,"y: 2.7782606","y: 2.7782606",null,"y: 1.0554323","y: 1.0554323",null,"y: 1.0554323","y: 1.0554323",null,"y: 1.0554323","y: 1.0554323",null,"y: 1.0554323","y: 1.0554323",null,"y: 2.7782606","y: 2.7782606",null,"y: 2.7782606","y: 2.7782606",null,"y: 1.4562704","y: 1.4562704",null,"y: 1.4562704","y: 1.4562704",null,"y: 0.4901305","y: 0.4901305",null,"y: 0.4901305","y: 0.4901305",null,"y: 0.3944266","y: 0.3944266",null,"y: 0.3944266","y: 0.3944266",null,"y: 0.3944266","y: 0.3944266",null,"y: 0.3944266","y: 0.3944266",null,"y: 0.4901305","y: 0.4901305",null,"y: 0.4901305","y: 0.4901305",null,"y: 1.4562704","y: 1.4562704",null,"y: 1.4562704","y: 1.4562704",null,"y: 1.1942533","y: 1.1942533",null,"y: 1.1942533","y: 1.1942533",null,"y: 0.7827694","y: 0.7827694",null,"y: 0.7827694","y: 0.7827694",null,"y: 0.7827694","y: 0.7827694",null,"y: 0.7827694","y: 0.7827694",null,"y: 1.1942533","y: 1.1942533",null,"y: 1.1942533","y: 1.1942533",null,"y: 0.5475333","y: 0.5475333",null,"y: 0.5475333","y: 0.5475333",null,"y: 0.5475333","y: 0.5475333",null,"y: 0.5475333","y: 0.5475333",null,"y: 2.9910214","y: 2.9910214",null,"y: 2.9910214","y: 2.9910214",null,"y: 1.0635310","y: 1.0635310",null,"y: 1.0635310","y: 1.0635310",null,"y: 1.0635310","y: 1.0635310",null,"y: 1.0635310","y: 1.0635310",null,"y: 0.2956825","y: 0.2956825",null,"y: 0.2956825","y: 0.2956825",null,"y: 0.2956825","y: 0.2956825",null,"y: 0.2956825","y: 0.2956825"],"type":"scatter","mode":"lines","line":{"width":2.2677165354330708,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[8.480167064935884,5.9048662979799653,3.4090955988276015,0.99369689663990912,0,0,3.1736663993574266,2.3602221143882787,0,1.7677287125192691,0,0,0.40828841499953544,0,0,3.4109615794561163,2.6458744633764866,0.9799180900893989,0,0,1.924337558456231,1.2631917121032681,0,0.57579170076826003,0,0,0,2.5613775588122039,0,0,6.0178217069364059,5.0070558517721784,2.310738329479852,0.40758992593791071,0,0,0,3.0287549476062794,0,0,2.9910213945676096,2.7782605742286681,1.0554322577143322,0,0,1.4562704041321701,0.49013046057397142,0.3944265817998116,0,0,0,1.1942533431760558,0.7827693815204726,0,0,0.54753328158815218,0,0,1.0635310193141874,0,0.29568247075525905,0,0],"y":[15.3125,7.828125,3.3125,1.5,1,2,5.125,3.75,3,4.5,4,5,6.5,6,7,12.34375,10.1875,8.5,8,9,11.875,10.75,10,11.5,11,12,13,14.5,14,15,22.796875,18.375,17.25,16.5,16,17,18,19.5,19,20,27.21875,23.6875,21.5,21,22,25.875,24.25,23.5,23,24,25,27.5,26.5,26,27,28.5,28,29,30.75,30,31.5,31,32],"text":["y: 8.4801671","y: 5.9048663","y: 3.4090956","y: 0.9936969","y: 0.0000000","y: 0.0000000","y: 3.1736664","y: 2.3602221","y: 0.0000000","y: 1.7677287","y: 0.0000000","y: 0.0000000","y: 0.4082884","y: 0.0000000","y: 0.0000000","y: 3.4109616","y: 2.6458745","y: 0.9799181","y: 0.0000000","y: 0.0000000","y: 1.9243376","y: 1.2631917","y: 0.0000000","y: 0.5757917","y: 0.0000000","y: 0.0000000","y: 0.0000000","y: 2.5613776","y: 0.0000000","y: 0.0000000","y: 6.0178217","y: 5.0070559","y: 2.3107383","y: 0.4075899","y: 0.0000000","y: 0.0000000","y: 0.0000000","y: 3.0287549","y: 0.0000000","y: 0.0000000","y: 2.9910214","y: 2.7782606","y: 1.0554323","y: 0.0000000","y: 0.0000000","y: 1.4562704","y: 0.4901305","y: 0.3944266","y: 0.0000000","y: 0.0000000","y: 0.0000000","y: 1.1942533","y: 0.7827694","y: 0.0000000","y: 0.0000000","y: 0.5475333","y: 0.0000000","y: 0.0000000","y: 1.0635310","y: 0.0000000","y: 0.2956825","y: 0.0000000","y: 0.0000000"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"transparent","opacity":1,"size":null,"symbol":null,"line":{"width":1.8897637795275593,"color":"transparent"}},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null}],"layout":{"xaxis":{"domain":[0,0.80000000000000004],"automargin":true,"type":"linear","autorange":false,"range":[0.5,11.5],"tickmode":"array","ticktext":["wt","disp","cyl","hp","carb","gear","am","drat","mpg","vs","qsec"],"tickvals":[1,2,3,4,5,6,7,7.9999999999999991,9,10,11],"categoryorder":"array","categoryarray":["wt","disp","cyl","hp","carb","gear","am","drat","mpg","vs","qsec"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.283520132835205},"tickangle":-45,"showline":true,"linecolor":"rgba(0,0,0,1)","linewidth":0.66417600664176002,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis2":{"domain":[0.80000000000000004,1],"automargin":true,"showticklabels":false,"showgrid":false,"zeroline":false,"anchor":"y2","type":"linear","autorange":false,"range":[0,8.480167064935884],"tickmode":"array","ticktext":["0","2","4","6","8"],"tickvals":[0,2,4,6,8],"categoryorder":"array","categoryarray":["0","2","4","6","8"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"tickfont":{"color":null,"family":null,"size":0},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"gridcolor":null,"gridwidth":0,"title":{"text":"","font":{"color":null,"family":null,"size":0}},"hoverformat":".2f"},"yaxis2":{"domain":[0,0.80000000000000004],"automargin":true,"type":"linear","autorange":false,"range":[0.5,32.5],"tickmode":"array","ticktext":["Valiant","Hornet 4 Drive","Toyota Corona","Merc 230","Merc 240D","Merc 280C","Merc 280","Volvo 142E","Datsun 710","Fiat X1-9","Fiat 128","Toyota Corolla","Honda Civic","Lotus Europa","Porsche 914-2","Mazda RX4 Wag","Mazda RX4","Ferrari Dino","Maserati Bora","Ford Pantera L","Camaro Z28","Duster 360","Merc 450SE","Merc 450SL","Merc 450SLC","AMC Javelin","Dodge Challenger","Hornet Sportabout","Pontiac Firebird","Chrysler Imperial","Lincoln Continental","Cadillac Fleetwood"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],"categoryorder":"array","categoryarray":["Valiant","Hornet 4 Drive","Toyota Corona","Merc 230","Merc 240D","Merc 280C","Merc 280","Volvo 142E","Datsun 710","Fiat X1-9","Fiat 128","Toyota Corolla","Honda Civic","Lotus Europa","Porsche 914-2","Mazda RX4 Wag","Mazda RX4","Ferrari Dino","Maserati Bora","Ford Pantera L","Camaro Z28","Duster 360","Merc 450SE","Merc 450SL","Merc 450SLC","AMC Javelin","Dodge Challenger","Hornet Sportabout","Pontiac Firebird","Chrysler Imperial","Lincoln Continental","Cadillac Fleetwood"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.283520132835205},"tickangle":-0,"showline":true,"linecolor":"rgba(0,0,0,1)","linewidth":0.66417600664176002,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"yaxis":{"domain":[0.80000000000000004,1],"automargin":true,"showticklabels":false,"showgrid":false,"zeroline":false,"anchor":"x","type":"linear","autorange":false,"range":[0,10.760803006470665],"tickmode":"array","ticktext":["0.0","2.5","5.0","7.5","10.0"],"tickvals":[0,2.5,5,7.5,10],"categoryorder":"array","categoryarray":["0.0","2.5","5.0","7.5","10.0"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"tickfont":{"color":null,"family":null,"size":0},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"gridcolor":null,"gridwidth":0,"title":{"text":"","font":{"color":null,"family":null,"size":0}},"hoverformat":".2f"},"annotations":[],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.80000000000000004,"y0":0.80000000000000004,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.80000000000000004,"y0":0,"y1":0.80000000000000004},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.80000000000000004,"x1":1,"y0":0,"y1":0.80000000000000004}],"images":[],"margin":{"t":0,"r":null,"b":31.88044831880449,"l":151.43212951432133},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"y":1,"yanchor":"top"},"hovermode":"closest","barmode":"relative","paper_bgcolor":"rgba(255,255,255,1)","title":""},"attrs":{"149c51019cf6f":{"xend":{},"yend":{},"colour":{},"linetype":{},"size":{},"x":{},"y":{},"type":"scatter"},"149c5e8188ab":{"colour":{},"shape":{},"size":{},"x":{},"y":{}},"149c55a3399fd":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20]},"149c59e9999d":{"x":{},"y":{},"fill":{},"text":{},"type":"heatmap"},"149c546136ea1":{"xend":{},"yend":{},"colour":{},"linetype":{},"size":{},"x":{},"y":{},"type":"scatter"},"149c525c42ff8":{"colour":{},"shape":{},"size":{},"x":{},"y":{}}},"source":"A","config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displaylogo":false,"modeBarButtonsToRemove":["sendDataToCloud","select2d","lasso2d","autoScale2d","hoverClosestCartesian","hoverCompareCartesian","sendDataToCloud"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+.small[ https://github.com/talgalili/heatmaply ]
+---
+## ggplots in a loop
+
+
+``` r
+p1 &lt;- ggplot(mtcars, aes(disp, mpg)) + geom_point()
+p2 &lt;- ggplot(mtcars, aes(qsec, mpg)) + geom_point()
+x &lt;- list(p1, p2)
+lapply(x, print)
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-30-2.png)&lt;!-- --&gt;
+
+```
+## [[1]]
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-30-3.png)&lt;!-- --&gt;
+
+```
+## 
+## [[2]]
+```
+
+![](71_Tidyverse_ggplot2_files/figure-html/unnamed-chunk-30-4.png)&lt;!-- --&gt;
+
+``` r
+# for (i in 1:length(x)) {
+#   print(x[i])
+# }
+```
+
+
+
+---
+## Graphic editors
+
+- **Inkscape** - vector graphics editor. Works with Scalable Vector Graphics (SVG) format. Export in any format, at any resolution. https://inkscape.org
+    - Note `svg` graphic device in R. `ggsave()` also saves graphs in `svg` format
+
+- **GIMP** - raster graphics editor. Think Photoshop. https://www.gimp.org
+
+https://daviesmediadesign.com/inkscape-vs-gimp-which-one-should-you-use/ 
+
+---
+## But wait... There's more
+
+- https://gganimate.com - animated ggplots
+- https://wilkelab.org/ggridges - ridgeline plots
+- https://ggrepel.slowkow.com - nonoverlapping text labels
+- https://ggobi.github.io/ggally - ggplot2 extension with pairwise plot, scatterplot, parallel coordinates plot, survival plot, network plots, and more.
+- https://github.com/erikgahner/awesome-ggplot2
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
