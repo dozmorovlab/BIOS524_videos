@@ -29,8 +29,14 @@ Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous
 
 - [53_MathJax](https://dozmorovlab.github.io/BIOS524_videos/53_MathJax.html) - formula formatting with MathJax and including them in RMarkdown
 
+## Week 6
 
+- [61_Tidyverse_dplyr](https://dozmorovlab.github.io/BIOS524_videos/61_Tidyverse_dplyr.html) - Tidyverse packages, principles of tidy data, reading data, tibbles substituting data frames, wide/long data format, data manipulation with dplyr, the pipe operator
 
+.html
+71_Tidyverse_ggplot2.html
+81_Packages.html
+82_Packages.html
 
 # Notes
 
