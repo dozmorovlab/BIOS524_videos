@@ -44,6 +44,7 @@ Slides for the online BIOS 524 Biostatistical Computing course, R part. Previous
 
 - [82_Packages](https://dozmorovlab.github.io/BIOS524_videos/82_Packages.html) - documenting your package with roxygen2, NAMESPACE file, vignettes, building and debugging your package, including datasets
 
+- [83_Optimization_best_practices](https://dozmorovlab.github.io/BIOS524_videos/83_Optimization_best_practices.html) - timing and optimizing code, parallelization, code profiling
 
 
 # Notes
